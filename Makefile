@@ -1,8 +1,9 @@
-all: heat.cgi
+all: cgi
 
-heat.cgi: cgi.o
-	g++ -o heat.cgi $^
+CC = g++
+
+cgi: cgi.o
 
 install:
-	cp heat.cgi /var/www/html/heat/bin/
-	cp index.html /var/www/html/heat/
+        cp cgi /var/www/html/heat/bin/heat.cgi
+        cp index.html /var/www/html/heat/
