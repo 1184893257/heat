@@ -43,10 +43,10 @@ bool send(int msgid, long msgType, const Method method, const json& req, json& r
 {
 	Msg m;
 	string jsonStr = req.dump();
-	if (jsonStr.length + 1 > sizeof(m.json))
+	if (jsonStr.length() + 1 > sizeof(m.json))
 	{
 		rsp["err"] = "message too long";
-		rsp["jsonLength"] = jsonStr.length;
+		rsp["jsonLength"] = jsonStr.length();
 		rsp["json"] = jsonStr;
 		return false;
 	}
