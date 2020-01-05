@@ -7,12 +7,13 @@
 void initSG90()
 {
 	wiringPiSetup();  //wiringpi初始化
-	softPwmCreate(PIN, 10, RANGE);  //创建一个使舵机转到90的pwm输出信号
 }
 
 void hit()
 {
-	softPwmWrite(PIN, 5);   //将pwm输出复写为使舵机转到0
+	softPwmCreate(PIN, 5, RANGE);  //创建一个使舵机转到90的pwm输出信号
 	delay(1000);
 	softPwmWrite(PIN, 10);//再次复写pwm输出
+	delay(1000);
+	pinMode(pin, INPUT);
 }
