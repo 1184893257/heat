@@ -1,0 +1,13 @@
+[Unit]
+Description=Heat my towel
+After=network.target
+
+[Service]
+Type=forking
+User=nobody
+Restart=on-failure
+RestartSec=5s
+ExecStart=/var/www/html/heat/bin/daemon
+
+[Install]
+WantedBy=multi-user.target
