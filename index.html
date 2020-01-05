@@ -21,11 +21,14 @@
 	}
 	</script>
 	
-    <form action="/bin/heat.cgi" method="post" target="iframe" name="myform">
-		<input type='hidden' name="cmd" value ='hit'/>
-        <input type="text" name="instr" value="6" />
-        <input type="text" name="instr2" value="7" />
-        <input type="submit" value="提交" />
+    <form action="/bin/heat.cgi" method="post" target="iframe">
+		<input type="hidden" name="cmd" value ="hit"/>
+        <input type="submit" value="立即触发" />
+    </form>
+    <form action="/bin/heat.cgi" method="post" target="iframe">
+		<input type="hidden" name="cmd" value ="loophit"/>
+        <input type="text" name="hour" value="6" /> 小时内
+        <input type="submit" value="循环触发" />
     </form>
     <iframe id="iframe" name="iframe" frameborder="0"
 		onLoad="autoResize('iframe');"></iframe>
