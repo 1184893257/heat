@@ -10,11 +10,16 @@
 using namespace std;
 using json = nlohmann::json;
 
+void initSG90();
+void hit();
+
 int main()
 {
 #ifdef __linux__
 	daemon(0, 0);
 #endif
+
+	initSG90();
 
 	for (;;)
 	{
@@ -23,6 +28,7 @@ int main()
 		auto cmd = req["cmd"].get<string>();
 		if (cmd == string("hit"))
 		{
+			hit();
 			req["ret"] = "hit ok";
 			severReply(req);
 		}

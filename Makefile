@@ -6,7 +6,8 @@ CXXFLAGS += -O0 -g -std=gnu++11
 
 cgi: cgi.o ipc.o urldecoder.o
 
-daemon: daemon.o ipc.o
+daemon: daemon.o ipc.o sg90.o
+	$(CC) $(CXXFLAGS) -o daemon $^ -lwiringPi -lwiringPiDev
 
 clean:
 	rm *.o

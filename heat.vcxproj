@@ -120,6 +120,7 @@
   <ItemGroup>
     <ClCompile Include="daemon.cpp" />
     <ClCompile Include="ipc.cpp" />
+    <ClCompile Include="sg90.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ipc.h" />
