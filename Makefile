@@ -8,6 +8,10 @@ cgi: cgi.o ipc.o
 
 daemon: daemon.o ipc.o
 
+clean:
+	rm *.o
+	rm cgi daemon
+
 install:
 	cp cgi /var/www/html/heat/bin/heat.cgi
 	cp daemon /var/www/html/heat/bin/
