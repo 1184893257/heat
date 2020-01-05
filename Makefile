@@ -13,11 +13,11 @@ clean:
 	rm cgi daemon
 
 install:
-	cp cgi /var/www/html/heat/bin/heat.cgi
-	cp daemon /var/www/html/heat/bin/
-	cp index.html /var/www/html/heat/
+	cp -f cgi /var/www/html/heat/bin/heat.cgi
+	cp -f daemon /var/www/html/heat/bin/
+	cp -f index.html /var/www/html/heat/
 	
 	mkdir -p /usr/lib/systemd/system
-	cp heat.service /usr/lib/systemd/system/
+	cp -u heat.service /usr/lib/systemd/system/
 	systemctl enable heat.service
 	systemctl restart heat.service
