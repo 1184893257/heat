@@ -119,8 +119,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cgi.cpp" />
+    <ClCompile Include="daemon.cpp" />
+    <ClCompile Include="ipc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ipc.h" />
     <ClInclude Include="json.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
