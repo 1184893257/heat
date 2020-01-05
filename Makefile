@@ -2,8 +2,12 @@ all: cgi
 
 CC = g++
 
-cgi: cgi.o
+CXXFLAGS += -std=gnu++11
+
+cgi: cgi.o ipc.o
+
+daemon: daemon.o ipc.o
 
 install:
-        cp cgi /var/www/html/heat/bin/heat.cgi
-        cp index.html /var/www/html/heat/
+	cp cgi /var/www/html/heat/bin/heat.cgi
+	cp index.html /var/www/html/heat/

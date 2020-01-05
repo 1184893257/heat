@@ -12,6 +12,7 @@
 *.o
 *.cgi
 cgi
+daemon
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

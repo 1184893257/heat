@@ -42,18 +42,18 @@ int initMsg(bool isSever)
 bool send(int msgid, long msgType, const Method method, const json& req, json& rsp)
 {
 	Msg m;
-	string json = req.dump();
-	if (json.length + 1 > sizeof(m.json))
+	string jsonStr = req.dump();
+	if (jsonStr.length + 1 > sizeof(m.json))
 	{
 		rsp["err"] = "message too long";
-		rsp["jsonLength"] = json.length;
-		rsp["json"] = json;
+		rsp["jsonLength"] = jsonStr.length;
+		rsp["json"] = jsonStr;
 		return false;
 	}
 
 	m.msgType = REQUEST;
 	m.method = method;
-	strcpy(m.json, json.c_str());
+	strcpy(m.json, jsonStr.c_str());
 	msgsnd(msgid, &m, sizeof(m) - sizeof(m.msgType), 0);
 	return true;
 }
