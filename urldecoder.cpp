@@ -4,12 +4,13 @@ using namespace std;
 //解url编码实现 
 string urldecode(const string& encd)
 {
-	char p[2];
+	int buf;
+	unsigned char* p = (unsigned char*)(&buf);
 
 	string decd;
 	for (unsigned int i = 0; i < encd.length(); i++)
 	{
-		memset(p, '\0', 2);
+		buf = 0;
 		if (encd[i] != '%')
 		{
 			unsigned char ch = encd[i];
