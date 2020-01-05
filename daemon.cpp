@@ -18,9 +18,8 @@ int main()
 
 	for (;;)
 	{
-		Method method;
 		json req;
-		severListen(method, req);
+		severListen(req);
 		severReply(req);
 	}
 }

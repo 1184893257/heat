@@ -14,7 +14,6 @@ using json = nlohmann::json;
 typedef struct
 {
 	long msgType;
-	Method method;
 	char json[100];
 }Msg;
 
@@ -39,7 +38,7 @@ static int initMsg(bool isSever)
 	return msgid;
 }
 
-static bool send(int msgid, long msgType, const Method method, const json& req, json& rsp)
+static bool send(int msgid, long msgType, const json& req, json& rsp)
 {
 	Msg m;
 	string jsonStr = req.dump();
@@ -52,42 +51,37 @@ static bool send(int msgid, long msgType, const Method method, const json& req, 
 	}
 
 	m.msgType = msgType;
-	m.method = method;
 	strcpy(m.json, jsonStr.c_str());
 	msgsnd(msgid, &m, sizeof(m) - sizeof(m.msgType), 0);
 	return true;
 }
 
-static void recv(int msgid, long msgType, Method* method, json& req)
+static void recv(int msgid, long msgType, json& req)
 {
 	Msg rcv;
 	msgrcv(msgid, &rcv, sizeof(rcv) - sizeof(rcv.msgType), msgType, 0);
-	if (method)
-	{
-		*method = rcv.method;
-	}
 	req = json::parse(rcv.json);
 }
 
-void clientCall(const Method method, const nlohmann::json& req, nlohmann::json& rsp)
+void clientCall(const nlohmann::json& req, nlohmann::json& rsp)
 {
 	int msgid = initMsg(false);
-	if (!send(msgid, REQUEST, method, req, rsp))
+	if (!send(msgid, REQUEST, req, rsp))
 		return;
-	recv(msgid, RESPONSE, nullptr, rsp);
+	recv(msgid, RESPONSE, rsp);
 }
 
-void severListen(Method& method, nlohmann::json& req)
+void severListen(nlohmann::json& req)
 {
 	int msgid = initMsg(true);
-	recv(msgid, REQUEST, &method, req);
+	recv(msgid, REQUEST, req);
 }
 
 void severReply(const nlohmann::json& rsp)
 {
 	json err;
 	int msgid = initMsg(true);
-	if (!send(msgid, RESPONSE, Method::hit, rsp, err))
+	if (!send(msgid, RESPONSE, rsp, err))
 	{
 		syslog(LOG_ERR, "message too long %s", err.dump().c_str());
 	}
