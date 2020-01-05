@@ -1,5 +1,5 @@
-#include <stdio.h>
-
+#include <string>
+#include <iostream>
 #include "ipc.h"
 
 #ifdef __linux__
@@ -7,7 +7,7 @@
 #include <syslog.h>
 #endif // __linux__
 
-
+using namespace std;
 using json = nlohmann::json;
 
 int main()
@@ -20,6 +20,21 @@ int main()
 	{
 		json req;
 		severListen(req);
-		severReply(req);
+		auto cmd = req["cmd"].get<string>();
+		if (cmd == string("hit"))
+		{
+			req["ret"] = "hit ok";
+			severReply(req);
+		}
+		else if (cmd == string("loophit"))
+		{
+			req["ret"] = "loophit ok";
+			severReply(req);
+		}
+		else
+		{
+			req["ret"] = "unknown cmd";
+			severReply(req);
+		}
 	}
 }
