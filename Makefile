@@ -4,7 +4,7 @@ CC = g++
 
 CXXFLAGS += -O0 -g -std=gnu++11
 
-cgi: cgi.o ipc.o
+cgi: cgi.o ipc.o urldecoder.o
 
 daemon: daemon.o ipc.o
 
