@@ -15,5 +15,5 @@ void hit()
 	delay(1000);
 	softPwmWrite(PIN, 10);//再次复写pwm输出
 	delay(1000);
-	pinMode(pin, INPUT);
+	pinMode(PIN, INPUT);
 }
