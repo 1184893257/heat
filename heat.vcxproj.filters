@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cgi.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ipc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

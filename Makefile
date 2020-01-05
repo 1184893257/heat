@@ -1,8 +1,8 @@
-all: cgi
+all: cgi daemon
 
 CC = g++
 
-CXXFLAGS += -std=gnu++11
+CXXFLAGS += -O0 -g -std=gnu++11
 
 cgi: cgi.o ipc.o
 

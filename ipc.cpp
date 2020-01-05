@@ -22,7 +22,7 @@ constexpr int PROJECT_ID = 'h';
 constexpr long REQUEST = 1;
 constexpr long RESPONSE = 2;
 
-int initMsg(bool isSever)
+static int initMsg(bool isSever)
 {
 	static int msgid = 0;
 	if (msgid == 0)
@@ -39,7 +39,7 @@ int initMsg(bool isSever)
 	return msgid;
 }
 
-bool send(int msgid, long msgType, const Method method, const json& req, json& rsp)
+static bool send(int msgid, long msgType, const Method method, const json& req, json& rsp)
 {
 	Msg m;
 	string jsonStr = req.dump();
@@ -51,14 +51,14 @@ bool send(int msgid, long msgType, const Method method, const json& req, json& r
 		return false;
 	}
 
-	m.msgType = REQUEST;
+	m.msgType = msgType;
 	m.method = method;
 	strcpy(m.json, jsonStr.c_str());
 	msgsnd(msgid, &m, sizeof(m) - sizeof(m.msgType), 0);
 	return true;
 }
 
-void recv(int msgid, long msgType, Method* method, json& req)
+static void recv(int msgid, long msgType, Method* method, json& req)
 {
 	Msg rcv;
 	msgrcv(msgid, &rcv, sizeof(rcv) - sizeof(rcv.msgType), msgType, 0);
@@ -66,7 +66,7 @@ void recv(int msgid, long msgType, Method* method, json& req)
 	{
 		*method = rcv.method;
 	}
-	req.parse(rcv.json);
+	req = json::parse(rcv.json);
 }
 
 void clientCall(const Method method, const nlohmann::json& req, nlohmann::json& rsp)

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <time.h>
 #include "ipc.h"
 using namespace std;
 using json = nlohmann::json;
@@ -17,7 +18,8 @@ int main(int argc, char const *argv[], char const *env[])
 	cin.read(buf, SIZE);
 	cout << "input:" << buf << endl;*/
 	json req = {
-		{"hello", "world"}
+		{"hello", "world"},
+		{"time", time(0)}
 	};
 	json rsp;
 	clientCall(Method::hit, req, rsp);

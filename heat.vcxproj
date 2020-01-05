@@ -118,7 +118,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cgi.cpp" />
     <ClCompile Include="daemon.cpp" />
     <ClCompile Include="ipc.cpp" />
   </ItemGroup>
