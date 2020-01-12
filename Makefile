@@ -12,7 +12,7 @@ daemon: daemon.o ipc.o sg90.o
 	$(CC) $(CXXFLAGS) -o daemon $^ -lwiringPi -lwiringPiDev $(CV_LIBS)
 
 ocr_main: ocr.o ocr_main.o
-	$(CC) $(CXXFLAGS) -o ocr_main $^ -lwiringPi -lwiringPiDev $(CV_LIBS)
+	$(CC) $(CXXFLAGS) -o ocr_main $^ $(CV_LIBS)
 
 clean:
 	rm *.o

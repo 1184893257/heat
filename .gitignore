@@ -14,6 +14,7 @@
 cgi
 daemon
 !cgi/
+ocr_main
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
