@@ -15,5 +15,5 @@ void hit()
 	delay(1000);
 	softPwmWrite(PIN, 10);//再次复写pwm输出
 	delay(1000);
-	pinMode(PIN, INPUT);
+	pinMode(PIN, INPUT);// 停止 PWM 信号输出, 不然会时不时抖动一下
 }

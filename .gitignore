@@ -13,6 +13,7 @@
 *.cgi
 cgi
 daemon
+!cgi/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
