@@ -1,17 +1,22 @@
-all: cgi daemon
+all: cgi daemon ocr_main
 
 CC = g++
 
-CXXFLAGS += -O0 -g -std=gnu++11
+CXXFLAGS += -O0 -g -std=gnu++11 -I/usr/include/opencv
+
+CV_LIBS = `pkg-config --libs opencv`
 
 cgi: cgi.o ipc.o urldecoder.o
 
 daemon: daemon.o ipc.o sg90.o
-	$(CC) $(CXXFLAGS) -o daemon $^ -lwiringPi -lwiringPiDev
+	$(CC) $(CXXFLAGS) -o daemon $^ -lwiringPi -lwiringPiDev $(CV_LIBS)
+
+ocr_main: ocr.o ocr_main.o
+	$(CC) $(CXXFLAGS) -o ocr_main $^ -lwiringPi -lwiringPiDev $(CV_LIBS)
 
 clean:
 	rm *.o
-	rm cgi daemon
+	rm cgi daemon ocr_main
 
 install:
 	cp -f cgi /var/www/html/heat/bin/heat.cgi
