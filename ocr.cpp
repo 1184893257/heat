@@ -1,6 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <algorithm>
+#include <cassert>
 
 using namespace std;
 using namespace cv;
@@ -66,8 +67,9 @@ void rotate(Mat& input, Mat& origin)
 	double b = cos(avAng / 180 * CV_PI);
 	int width_rotate = int(height*fabs(a) + width*fabs(b));
 	int height_rotate = int(width*fabs(a) + height*fabs(b));
-	*m.ptr(0, 2) += (width_rotate - width) / 2;
-	*m.ptr(1, 2) += (height_rotate - height) / 2;
+	assert(m.type() == CV_64FC1);	// 应该是 double 类型
+	*((double*)m.ptr(0, 2)) += (width_rotate - width) / 2;
+	*((double*)m.ptr(1, 2)) += (height_rotate - height) / 2;
 
 	Mat& output = borders;
 	auto outSize = Size(width_rotate, height_rotate);
@@ -90,14 +92,15 @@ void testRotate(Mat& input)
 	Point2f center;
 	center.x = float(width / 2.0);
 	center.y = float(height / 2.0);
-	auto m = getRotationMatrix2D_(center, avAng, 1);
+	auto m = getRotationMatrix2D(center, avAng, 1);
 	//建立输出图像RotateRow
 	/**/double a = sin(avAng / 180 * CV_PI);
 	double b = cos(avAng / 180 * CV_PI);
 	int width_rotate = int(height*fabs(a) + width*fabs(b));
 	int height_rotate = int(width*fabs(a) + height*fabs(b));
-	m(0, 2) += (width_rotate - width) / 2;
-	m(1, 2) += (height_rotate - height) / 2;
+	assert(m.type() == CV_64FC1);	// 应该是 double 类型
+	*((double*)m.ptr(0, 2)) += (width_rotate - width) / 2;
+	*((double*)m.ptr(1, 2)) += (height_rotate - height) / 2;
 
 	Mat output;
 	auto outSize = Size(width_rotate, height_rotate);
