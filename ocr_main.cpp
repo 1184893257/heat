@@ -16,7 +16,7 @@ int main()
 	else
 	{
 #if defined(__linux__)
-		cout << ocr("heat/heater.jpg") << endl;
+		cout << ocr("ocr/heater.jpg") << endl;
 #else
 		string dir = "D:\\temp\\MobileFile\\";
 		for (int i = 0; i <= 9; ++i)
