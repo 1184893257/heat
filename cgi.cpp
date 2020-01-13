@@ -53,7 +53,8 @@ int main(int argc, char const *argv[], char const *env[])
 
 	if (rsp.contains("img"))
 	{
-		cout << "<img src=\"" << rsp["img"] << "\" alt=\"img\"/>\n";
+		// img 自带了双引号
+		cout << "<img src=" << rsp["img"] << " alt=\"img\"/>\n";
 	}
 	else
 	{
