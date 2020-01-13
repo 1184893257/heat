@@ -21,14 +21,41 @@
 	}
 	</script>
 	
-    <form action="/bin/heat.cgi" method="post" target="iframe">
+	<form action="/bin/heat.cgi" method="post" target="iframe">
 		<input type="hidden" name="cmd" value ="hit"/>
-        <input type="submit" value="立即触发" />
-    </form>
+		<table width="100%" border="1" cellpadding="10">
+		  <tr>
+			<td align="center">
+				<input type="submit" value="立即触发" />
+			</td>
+		  </tr>
+		</table>
+	</form>
+
+	
     <form action="/bin/heat.cgi" method="post" target="iframe">
 		<input type="hidden" name="cmd" value ="loophit"/>
-        <input type="text" name="hour" value="6" /> 小时内
-        <input type="submit" value="循环触发" />
+		<table width="100%" border="1" cellpadding="10">
+		  <tr>
+			<td align="center">
+				<input type="text" name="hour" value="6" /> 小时内
+				<input type="submit" value="循环触发" />
+			</td>
+		  </tr>
+		</table>
+    </form>
+	
+    <form action="/bin/heat.cgi" method="post" target="iframe">
+		<input type="hidden" name="cmd" value ="snap"/>
+		
+		<table width="100%" border="1" cellpadding="10">
+		  <tr>
+			<td align="center">
+				<input type="submit" value="拍照" />
+				并旋转 <input type="text" name="rotate" value="90" /> 度
+			</td>
+		  </tr>
+		</table>
     </form>
     <iframe id="iframe" name="iframe" frameborder="0"
 		onLoad="autoResize('iframe');"></iframe>

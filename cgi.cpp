@@ -51,7 +51,14 @@ int main(int argc, char const *argv[], char const *env[])
 		<< "<html>\n"
 		<< "<head><title>welcome to c cgi.</title></head>\n<body>\n";
 
-	cout << rsp.dump() << endl;
+	if (rsp.contains("img"))
+	{
+		cout << "<img src=\"" << rsp["img"] << "\" alt=\"img\"/>\n";
+	}
+	else
+	{
+		cout << rsp.dump() << endl;
+	}
 
 	cout << "</body></html>\n";
 	return 0;

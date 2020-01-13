@@ -37,6 +37,12 @@ int main()
 			req["ret"] = "loophit ok";
 			severReply(req);
 		}
+		else if (cmd == string("snap"))
+		{
+			req["ret"] = "loophit ok";
+			req["img"] = "/camera/snap.jpg";
+			severReply(req);
+		}
 		else
 		{
 			req["ret"] = "unknown cmd";
