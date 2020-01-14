@@ -7,6 +7,8 @@
 #include <syslog.h>
 #endif // __linux__
 
+const char* WEB_DIR = "/var/www/html/heat";
+
 using namespace std;
 using json = nlohmann::json;
 
@@ -40,10 +42,12 @@ int main()
 		}
 		else if (cmd == string("snap"))
 		{
-			string path = "/heat/camera/snap.jpg";
+			string relPath = "/heat/camera/snap.jpg";
+			string path = WEB_DIR;
+			path += relPath;
 			capture(path);
 			req["ret"] = "loophit ok";
-			req["img"] = path;
+			req["img"] = relPath;
 			severReply(req);
 		}
 		else
