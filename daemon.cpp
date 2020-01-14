@@ -18,6 +18,8 @@ void hit();
 void capture(const string& savePath);
 void rotate(const string& path, float rot);
 
+bool ocr_debug = false;
+
 int main()
 {
 #ifdef __linux__
