@@ -9,16 +9,49 @@ using namespace cv;
 extern bool ocr_debug;
 #define DEBUG if (ocr_debug)
 
-void rotate(Mat& input, Mat& origin)
+// 无缺失旋转，可输入任何图片
+void rotate(Mat& input, float avAng)
+{
+	// 获取二维旋转的仿射变换矩阵
+	int height = input.rows;
+	int width = input.cols;
+
+	Point2f center;
+	center.x = float(width / 2.0);
+	center.y = float(height / 2.0);
+	auto m = getRotationMatrix2D(center, avAng, 1);
+	//建立输出图像RotateRow
+	/**/double a = sin(avAng / 180 * CV_PI);
+	double b = cos(avAng / 180 * CV_PI);
+	int width_rotate = int(height*fabs(a) + width*fabs(b));
+	int height_rotate = int(width*fabs(a) + height*fabs(b));
+	assert(m.type() == CV_64FC1);	// 应该是 double 类型
+	*((double*)m.ptr(0, 2)) += (width_rotate - width) / 2;
+	*((double*)m.ptr(1, 2)) += (height_rotate - height) / 2;
+
+	Mat output;
+	auto outSize = Size(width_rotate, height_rotate);
+	warpAffine(input, output, m, outSize, INTER_LINEAR + WARP_FILL_OUTLIERS);
+	input = output;
+}
+
+void rotate(const string& path, float rot)
+{
+	Mat image = imread(path, cv::IMREAD_UNCHANGED);
+	rotate(image, rot);
+	imwrite(path, image);
+}
+
+// 自动做倾斜校正, 倾斜角度必须在30度以内
+void autoRotate(Mat& input, Mat& origin)
 {
 	// 边缘检测减少计算量，实验后发现不能进行边缘检测，会缺少信息，算不准旋转角度
 	//Mat borders;
 	//Canny(input, borders, 30, 200, 3);
 	//DEBUG imshow("Canny", borders);
-	Mat borders = input;
 
 	vector<Vec2f> lines;
-	HoughLines(borders, lines, 1, CV_PI / 180, 20);
+	HoughLines(input, lines, 1, CV_PI / 180, 20);
 
 	DEBUG {
 		float alpha = 1000;
@@ -54,59 +87,9 @@ void rotate(Mat& input, Mat& origin)
 	//计算出平均倾斜角，anAng为角度制
 	float avAng = (float)((sumAng / numLine) * 180 / CV_PI);
 
-	// 获取二维旋转的仿射变换矩阵
-	int height = input.rows;
-	int width = input.cols;
+	rotate(input, avAng);
 
-	Point2f center;
-	center.x = float(width / 2.0);
-	center.y = float(height / 2.0);
-	auto m = getRotationMatrix2D(center, avAng, 1);
-	//建立输出图像RotateRow
-	double a = sin(avAng / 180 * CV_PI);
-	double b = cos(avAng / 180 * CV_PI);
-	int width_rotate = int(height*fabs(a) + width*fabs(b));
-	int height_rotate = int(width*fabs(a) + height*fabs(b));
-	assert(m.type() == CV_64FC1);	// 应该是 double 类型
-	*((double*)m.ptr(0, 2)) += (width_rotate - width) / 2;
-	*((double*)m.ptr(1, 2)) += (height_rotate - height) / 2;
-
-	Mat& output = borders;
-	auto outSize = Size(width_rotate, height_rotate);
-	warpAffine(input, output, m, outSize, INTER_LINEAR + WARP_FILL_OUTLIERS);
-
-	input = output;
 	DEBUG imshow("rotate", input);
-}
-
-// 测试无缺失旋转，可输入任何图片
-void testRotate(Mat& input)
-{
-	//计算出平均倾斜角，anAng为角度制
-	float avAng = 30;
-
-	// 获取二维旋转的仿射变换矩阵
-	int height = input.rows;
-	int width = input.cols;
-
-	Point2f center;
-	center.x = float(width / 2.0);
-	center.y = float(height / 2.0);
-	auto m = getRotationMatrix2D(center, avAng, 1);
-	//建立输出图像RotateRow
-	/**/double a = sin(avAng / 180 * CV_PI);
-	double b = cos(avAng / 180 * CV_PI);
-	int width_rotate = int(height*fabs(a) + width*fabs(b));
-	int height_rotate = int(width*fabs(a) + height*fabs(b));
-	assert(m.type() == CV_64FC1);	// 应该是 double 类型
-	*((double*)m.ptr(0, 2)) += (width_rotate - width) / 2;
-	*((double*)m.ptr(1, 2)) += (height_rotate - height) / 2;
-
-	Mat output;
-	auto outSize = Size(width_rotate, height_rotate);
-	warpAffine(input, output, m, outSize, INTER_LINEAR + WARP_FILL_OUTLIERS);
-
-	imshow("justRotate", output);
 }
 
 void cutNums(const Mat& input, vector<Mat>& output)
@@ -244,8 +227,6 @@ string try_ocr(const string& picturePath, const OCR_OPTION& option)
 	Mat originCopy;
 	DEBUG cvtColor(image_gry, originCopy, COLOR_GRAY2RGB);
 
-	DEBUG testRotate(image_gry);
-
 	Mat& image_bin = image;
 	threshold(image_gry, image_bin, 240, 255, THRESH_BINARY); // convert to binary image
 	DEBUG imshow("image_bin", image_bin);
@@ -256,7 +237,7 @@ string try_ocr(const string& picturePath, const OCR_OPTION& option)
 	DEBUG imshow("image_ero", image_ero);
 
 	// 垂直矫正
-	rotate(image_ero, originCopy);
+	autoRotate(image_ero, originCopy);
 
 	Mat& image_dil = image_bin;
 	element = getStructuringElement(MORPH_RECT, option.dilateSize);

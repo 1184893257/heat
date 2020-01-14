@@ -16,6 +16,7 @@ using json = nlohmann::json;
 void initSG90();
 void hit();
 void capture(const string& savePath);
+void rotate(const string& path, float rot);
 
 int main()
 {
@@ -43,10 +44,13 @@ int main()
 		}
 		else if (cmd == string("snap"))
 		{
+			auto rot_str = req["rotate"].get<string>();
+			float rot = (float)atof(rot_str.c_str());
 			string relPath = "/heat/camera/snap.jpg";
 			string path = WEB_ROOT;
 			path += relPath;
 			capture(path);
+			rotate(path, rot);
 			req["ret"] = "snap ok";
 			req["img"] = relPath;
 			severReply(req);
