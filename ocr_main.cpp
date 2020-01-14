@@ -15,7 +15,7 @@ int main()
 	}
 	else
 	{
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 		cout << ocr("ocr/heater.jpg") << endl;
 #else
 		string dir = "D:\\temp\\MobileFile\\";
