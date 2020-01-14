@@ -12,6 +12,7 @@ using json = nlohmann::json;
 
 void initSG90();
 void hit();
+void capture(const string& savePath);
 
 int main()
 {
@@ -39,8 +40,10 @@ int main()
 		}
 		else if (cmd == string("snap"))
 		{
+			string path = "/heat/camera/snap.jpg";
+			capture(path);
 			req["ret"] = "loophit ok";
-			req["img"] = "/camera/snap.jpg";
+			req["img"] = path;
 			severReply(req);
 		}
 		else

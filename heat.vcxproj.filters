@@ -24,6 +24,12 @@
     <ClCompile Include="sg90.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ocr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="json.hpp">
