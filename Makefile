@@ -11,7 +11,7 @@ LDFLAGS += -Wl,--as-needed
 heat.cgi: cgi.o ipc.o urldecoder.o
 	$(CC) $(CXXFLAGS) $(LDFLAGS) -o heat.cgi $^
 
-daemon: daemon.o ipc.o sg90.o camera.o
+daemon: daemon.o ipc.o sg90.o camera.o ocr.o
 	$(CC) $(CXXFLAGS) $(LDFLAGS) -o daemon $^ -lwiringPi -lwiringPiDev $(CV_LIBS)
 
 ocr_main: ocr.o ocr_main.o
