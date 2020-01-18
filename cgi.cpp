@@ -2,6 +2,12 @@
 #include <string>
 #include <time.h>
 #include "ipc.h"
+#include "config.h"
+#if defined(__linux__)
+#include <sys/types.h>
+#include <signal.h>
+#endif
+
 using namespace std;
 using json = nlohmann::json;
 
@@ -42,6 +48,12 @@ int main(int argc, char const *argv[], char const *env[])
 			break;
 		}
 	}
+
+	init_config(false);
+
+#if defined(__linux__)
+	kill(config.daemonPid, SIGUSR1);
+#endif
 
 	json rsp;
 	clientCall(req, rsp);

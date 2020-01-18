@@ -8,10 +8,10 @@ CV_LIBS = `pkg-config --libs opencv`
 
 LDFLAGS += -Wl,--as-needed
 
-heat.cgi: cgi.o ipc.o urldecoder.o
+heat.cgi: cgi.o ipc.o urldecoder.o config.o
 	$(CC) $(CXXFLAGS) $(LDFLAGS) -o heat.cgi $^
 
-daemon: daemon.o ipc.o sg90.o camera.o ocr.o
+daemon: daemon.o ipc.o sg90.o camera.o ocr.o config.o signal_handler.o
 	$(CC) $(CXXFLAGS) $(LDFLAGS) -o daemon $^ -lwiringPi -lwiringPiDev $(CV_LIBS)
 
 ocr_main: ocr.o ocr_main.o

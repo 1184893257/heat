@@ -123,12 +123,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="daemon.cpp" />
     <ClCompile Include="ipc.cpp" />
     <ClCompile Include="ocr.cpp" />
     <ClCompile Include="sg90.cpp" />
+    <ClCompile Include="signal_handler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="ipc.h" />
     <ClInclude Include="json.hpp" />
   </ItemGroup>
