@@ -9,7 +9,7 @@ void hit();
 void capture(const string& savePath);
 void rotate(const string& path, float rot);
 
-void handleSignal()
+void handleSignal(int signum)
 {
 	json req;
 	severListen(req);
