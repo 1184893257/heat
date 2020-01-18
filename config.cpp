@@ -9,8 +9,8 @@ using namespace std;
 #include <unistd.h>
 #endif
 
-static const char* WEB_ROOT = "/var/www/html";
-static const char* HEAT_TO_WEBROOT = "/heat";
+static const char* WEB_ROOT = "/var/www/html/";
+static const char* HEAT_TO_WEBROOT = "/heat/";
 static const char* CONFIG_NAME = "config.json";
 
 GlobalConfig config;
