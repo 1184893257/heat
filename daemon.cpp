@@ -12,6 +12,7 @@ bool ocr_debug = false;
 #include <syslog.h>
 #include <signal.h>
 void initSG90();
+void handleSignal();
 
 int main()
 {
