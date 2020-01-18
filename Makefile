@@ -23,6 +23,7 @@ clean:
 
 install:
 	cp -f heat.cgi /var/www/html/heat/bin/heat.cgi
+	chmod u+s /var/www/html/heat/bin/heat.cgi
 	cp -f daemon /var/www/html/heat/bin/
 	cp -f index.html /var/www/html/heat/
 	
