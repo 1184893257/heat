@@ -51,7 +51,7 @@ void autoRotate(Mat& input, Mat& origin)
 	//DEBUG imshow("Canny", borders);
 
 	vector<Vec2f> lines;
-	HoughLines(input, lines, 1, CV_PI / 180, 20);
+	HoughLines(input, lines, 1, CV_PI / 180, 30);
 
 	DEBUG {
 		float alpha = 1000;
@@ -221,14 +221,14 @@ string try_ocr(const string& picturePath, const OCR_OPTION& option)
 {
 	cv::Mat image = cv::imread(picturePath, cv::IMREAD_GRAYSCALE);
 
-	Mat image_gry;
-	resize(image, image_gry, Size(image.cols / 6, image.rows / 6));
+	Mat image_gry = image;
+	// resize(image, image_gry, Size(image.cols / 6, image.rows / 6));
 
 	Mat originCopy;
 	DEBUG cvtColor(image_gry, originCopy, COLOR_GRAY2RGB);
 
 	Mat& image_bin = image;
-	threshold(image_gry, image_bin, 240, 255, THRESH_BINARY); // convert to binary image
+	threshold(image_gry, image_bin, 225, 255, THRESH_BINARY); // convert to binary image
 	DEBUG imshow("image_bin", image_bin);
 
 	Mat& image_ero = image_gry;

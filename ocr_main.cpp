@@ -11,7 +11,7 @@ int main()
 {
 	if (ocr_debug)
 	{
-		cout << ocr("D:\\temp\\MobileFile\\8.jpg") << endl;
+		cout << ocr("snap.jpg") << endl;
 	}
 	else
 	{
