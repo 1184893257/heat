@@ -1,5 +1,6 @@
 #include "ipc.h"
 #include <string>
+#include <vector>
 using namespace std;
 using json = nlohmann::json;
 
@@ -56,11 +57,25 @@ static bool send(int msgid, long msgType, const json& req, json& rsp)
 	return true;
 }
 
-static void recv(int msgid, long msgType, json& req)
+static bool recv(int msgid, long msgType, json& req, int msgflg = 0)
 {
 	Msg rcv;
-	msgrcv(msgid, &rcv, sizeof(rcv) - sizeof(rcv.msgType), msgType, 0);
-	req = json::parse(rcv.json);
+	int bytes = msgrcv(msgid, &rcv, sizeof(rcv) - sizeof(rcv.msgType), msgType, msgflg);
+	if (bytes > 0) {
+    req = json::parse(rcv.json);
+    return true;
+	}
+  return false;
+}
+
+void clear(vector<json>& v)
+{
+  int msgid = initMsg(false);
+  json tmp;
+  while (recv(msgid, 0, tmp, IPC_NOWAIT))
+  {
+    v.push_back(tmp);
+  }
 }
 
 void clientCall(const nlohmann::json& req, nlohmann::json& rsp)

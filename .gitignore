@@ -17,6 +17,7 @@ daemon
 ocr_main
 CMakeFiles/
 CMakeCache.txt
+cmake-build-debug/
 cmake_install.cmake
 .idea
 *.cbp

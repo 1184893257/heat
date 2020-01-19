@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <time.h>
+#include <vector>
 #include "ipc.h"
 #include "config.h"
 #if defined(__linux__)
@@ -12,6 +13,7 @@ using namespace std;
 using json = nlohmann::json;
 
 string urldecode(const string& encd);
+void clear(vector<json>& v)
 
 void decodeParam(const string& pair, json& req)
 {
@@ -49,14 +51,24 @@ int main(int argc, char const *argv[], char const *env[])
 		}
 	}
 
-	init_config(false);
+	string cmd = req["cmd"];
+	if (cmd == string("clear"))
+  {
+	  vector<json> v;
+	  clear(v);
+	  req["msgs"] = v;
+  }
+	else
+  {
+    init_config(false);
 
 #if defined(__linux__)
-	kill(config.daemonPid, SIGUSR1);
+    kill(config.daemonPid, SIGUSR1);
 #endif
 
-	json rsp;
-	clientCall(req, rsp);
+    json rsp;
+    clientCall(req, rsp);
+  }
 
 	const char* endl = "<br>\n";
 	cout << "Content-type:text/html\n\n"

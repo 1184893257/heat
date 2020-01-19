@@ -23,8 +23,10 @@ message(STATUS "    version: ${OpenCV_VERSION}")
 message(STATUS "    libraries: ${OpenCV_LIBS}")
 message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 
+add_definitions(-D__linux__)
+
 # Declare the executable target built from your sources
-add_executable(ocr_main ocr_main.cpp ocr.cpp)
+add_executable(daemon daemon.cpp ocr.cpp ipc.cpp sg90.cpp camera.cpp config.cpp signal_handler.cpp)
 
 # Link your application with OpenCV libraries
-target_link_libraries(ocr_main PRIVATE ${OpenCV_LIBS})
+target_link_libraries(daemon PRIVATE ${OpenCV_LIBS})
