@@ -13,7 +13,7 @@ using namespace std;
 using json = nlohmann::json;
 
 string urldecode(const string& encd);
-void clear(vector<json>& v)
+void clear(vector<json>& v);
 
 void decodeParam(const string& pair, json& req)
 {
