@@ -52,11 +52,12 @@ int main(int argc, char const *argv[], char const *env[])
 	}
 
 	string cmd = req["cmd"];
+  json rsp;
 	if (cmd == string("clear"))
   {
 	  vector<json> v;
 	  clear(v);
-	  req["msgs"] = v;
+	  rsp["msgs"] = v;
   }
 	else
   {
@@ -66,7 +67,6 @@ int main(int argc, char const *argv[], char const *env[])
     kill(config.daemonPid, SIGUSR1);
 #endif
 
-    json rsp;
     clientCall(req, rsp);
   }
 
