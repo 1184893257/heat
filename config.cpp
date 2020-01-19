@@ -54,14 +54,44 @@ void writeFile(const string& path, const string& text)
 	outfile.close();
 }
 
+void to_json(json& j, const HeatResult& p)
+{
+  j = json{
+    { "textBeforeHit", p.textBeforeHit },
+    { "textAfterHit", p.textAfterHit},
+    { "hitTime", p.hitTime},
+    { "status", p.status}
+  };
+}
+
+void from_json(const json& j, HeatResult& p)
+{
+  j.at("textBeforeHit").get_to(p.textBeforeHit);
+  j.at("textAfterHit").get_to(p.textAfterHit);
+  j.at("hitTime").get_to(p.hitTime);
+  j.at("status").get_to(p.status);
+}
+
 void to_json(json& j, const GlobalConfig& p)
 {
-	j = json{ { "daemonPid", p.daemonPid } };
+	j = json{
+	  { "daemonPid", p.daemonPid },
+    { "taskDir", p.taskDir},
+    { "startTime", p.startTime},
+    { "endTime", p.endTime},
+    { "results", p.results}
+	};
 }
 
 void from_json(const json& j, GlobalConfig& p)
 {
 	j.at("daemonPid").get_to(p.daemonPid);
+	if (j.contains("taskDir")) {
+    j.at("startTime").get_to(p.startTime);
+    j.at("endTime").get_to(p.endTime);
+    j.at("taskDir").get_to(p.taskDir);
+    j.at("results").get_to(p.results);
+	}
 }
 
 void write_config()

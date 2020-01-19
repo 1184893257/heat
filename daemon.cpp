@@ -27,12 +27,27 @@ int main()
 	}
 }
 #else
+
+#include <vector>
 int main()
 {
-	json a = {
-		{"a", 1}
-	};
-	cout << a.contains("a") << endl;
+  GlobalConfig a = {
+          1,
+          2,
+          3,
+          "4",
+          {
+                  {
+                    "111",
+                    "222",
+                    "3",
+                    "4"
+                  }
+          }
+  };
+  json j = a;
+  cout << j.dump(4) << endl;
+  GlobalConfig b = j.get<GlobalConfig>();
 	return 0;
 }
 #endif // __linux__

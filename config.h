@@ -2,6 +2,8 @@
 
 #include "json.hpp"
 #include <string>
+#include <vector>
+#include <time.h>
 
 using namespace std;
 using json = nlohmann::json;
@@ -33,11 +35,26 @@ void write_struct(const string& path, const T& t)
 	writeFile(path, j.dump(4));
 }
 
-struct GlobalConfig {
+typedef struct {
+  string textBeforeHit;
+  string textAfterHit;
+  string hitTime;
+  string status;
+}HeatResult;
+
+typedef struct {
 	pid_t daemonPid;
-};
+	time_t startTime;
+  time_t endTime;
+	string taskDir;
+	vector<HeatResult> results;
+}GlobalConfig;
 
 extern GlobalConfig config;
+
+void to_json(json& j, const HeatResult& p);
+
+void from_json(const json& j, HeatResult& p);
 
 void to_json(json& j, const GlobalConfig& p);
 
