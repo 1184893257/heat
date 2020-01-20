@@ -67,7 +67,7 @@ bool captureAndHit(HeatResult& result)
 
 	string captureDir = config.taskDir + now;
 	captureDir += "/";
-	if (0 != CreateDir(captureDir))
+	if (0 != CreateDir(path_to_root(captureDir)))
 	{
 		result.status = captureDir + " create fail";
 		return false;
