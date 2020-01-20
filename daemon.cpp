@@ -54,7 +54,7 @@ int main()
 				{
 					result.status = hasError ? "Error" : "Normal";
 				}
-				config.results.add(result);
+				config.results.push_back(result);
 
 				if (!hasError)
 				{
