@@ -5,6 +5,7 @@
 using namespace std;
 
 #ifdef __linux__
+#include <syslog.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
