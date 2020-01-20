@@ -27,7 +27,7 @@ void handleSignal(int signum)
 	{
 		config.startTime = time(nullptr);
 		auto hourStr = req["hour"].get<string>();
-		int seconds = atoi(hourStr) * 60 * 60;
+		int seconds = atoi(hourStr.c_str()) * 60 * 60;
 		config.endTime = config.startTime + seconds;
 		config.results.clear();
 
@@ -81,8 +81,8 @@ bool captureAndHit(HeatResult& result)
 		return false;
 	}
 
-	config.textBeforeHit = ocr(beforeHitPicture);
-	int textLength = config.textBeforeHit.length();
+	result.textBeforeHit = ocr(beforeHitPicture);
+	int textLength = result.textBeforeHit.length();
 	if (textLength != 3)
 	{
 		return false;
@@ -97,8 +97,8 @@ bool captureAndHit(HeatResult& result)
 		return false;
 	}
 
-	config.textAfterHit = ocr(afterHitPicture);
-	textLength = config.textAfterHit.length();
+	result.textAfterHit = ocr(afterHitPicture);
+	textLength = result.textAfterHit.length();
 	if (textLength != 3)
 	{
 		return false;
