@@ -45,7 +45,7 @@ typedef struct {
 typedef struct {
 	pid_t daemonPid;
 	time_t startTime;
-  time_t endTime;
+    time_t endTime;
 	string taskDir;
 	vector<HeatResult> results;
 }GlobalConfig;
@@ -61,3 +61,9 @@ void to_json(json& j, const GlobalConfig& p);
 void from_json(const json& j, GlobalConfig& p);
 
 void init_config(bool isDaemon);
+
+void write_config();
+
+string getTime();
+
+int CreateDir(const string& sPathName);

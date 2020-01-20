@@ -5,19 +5,30 @@
 using namespace std;
 
 #ifdef __linux__
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#endif
+#include <stdio.h>
+#include <time.h>
 
 static const char* WEB_ROOT = "/var/www/html/";
-static const char* HEAT_TO_WEBROOT = "/heat/";
+static const char* HEAT_TO_WEBROOT = "heat/";
 static const char* CONFIG_NAME = "config.json";
+
+#else
+
+static const char* WEB_ROOT = "D:/temp/";
+static const char* HEAT_TO_WEBROOT = "heat/";
+static const char* CONFIG_NAME = "config.json";
+
+#endif
 
 GlobalConfig config;
 
 string path_to_webroot(const string& path_to_heat)
 {
-	string path = HEAT_TO_WEBROOT;
+	string path = "/";
+	path += HEAT_TO_WEBROOT;
 	path += path_to_heat;
 	return path;
 }
@@ -47,11 +58,46 @@ string readFile(const string& path)
 	return out;
 }
 
+#ifdef __linux__
+int CreateDir(const string& sPathName)
+{
+	char DirName[256];
+	strcpy(DirName, sPathName.c_str());
+	int i, len = strlen(DirName);
+	for (i = 1; i<len; i++)
+	{
+		if (DirName[i] == '/')
+		{
+			DirName[i] = 0;
+			if (access(DirName, F_OK) != 0)
+			{
+				if (mkdir(DirName, 0755) == -1)
+				{
+					syslog(LOG_ERR, "mkdir fail: %s", DirName);
+					return 1;
+				}
+			}
+			DirName[i] = '/';
+		}
+	}
+
+	return 0;
+}
+#else
+int CreateDir(const string& sPathName)
+{
+	return 0;
+}
+#endif
+
 void writeFile(const string& path, const string& text)
 {
-	ofstream outfile(path, ios::trunc);
-	outfile << text;
-	outfile.close();
+	if (0 == CreateDir(path.c_str()))
+	{
+		ofstream outfile(path, ios::trunc);
+		outfile << text;
+		outfile.close();
+	}
 }
 
 void to_json(json& j, const HeatResult& p)
@@ -75,22 +121,33 @@ void from_json(const json& j, HeatResult& p)
 void to_json(json& j, const GlobalConfig& p)
 {
 	j = json{
-	  { "daemonPid", p.daemonPid },
-    { "taskDir", p.taskDir},
-    { "startTime", p.startTime},
-    { "endTime", p.endTime},
-    { "results", p.results}
+		{ "daemonPid", p.daemonPid }
 	};
+	if (p.taskDir.length() > 0)
+	{
+		j["taskDir"] = p.taskDir;
+
+		// 拆开存储，因为任务结束 config 任务数据就会清洗
+		json detail = {
+			{ "startTime", p.startTime },
+			{ "endTime", p.endTime },
+			{ "results", p.results }
+		};
+		writeFile(path_to_root(p.taskDir + CONFIG_NAME), detail.dump(4));
+	}
 }
 
 void from_json(const json& j, GlobalConfig& p)
 {
 	j.at("daemonPid").get_to(p.daemonPid);
-	if (j.contains("taskDir")) {
-    j.at("startTime").get_to(p.startTime);
-    j.at("endTime").get_to(p.endTime);
-    j.at("taskDir").get_to(p.taskDir);
-    j.at("results").get_to(p.results);
+	if (j.contains("taskDir"))
+	{
+		j.at("taskDir").get_to(p.taskDir);
+		string detailStr = readFile(path_to_root(p.taskDir + CONFIG_NAME));
+		json detail = json::parse(detailStr);
+		detail.at("startTime").get_to(p.startTime);
+		detail.at("endTime").get_to(p.endTime);
+		detail.at("results").get_to(p.results);
 	}
 }
 
@@ -113,5 +170,18 @@ void init_config(bool isDaemon)
 		config.daemonPid = getpid();
 		write_config();
 	}
+#endif
+}
+
+string getTime()
+{
+#ifdef __linux__
+	char buf[40];
+	time_t now = time(nullptr);
+	struct tm *p = localtime(&now); /*取得当地时间*/
+	sprintf(buf, "%d%02d%02d_%02d-%02d-%02d", (1900 + p->tm_year), (1 + p->tm_mon), p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec);
+	return string(buf);
+#else
+	return "";
 #endif
 }
