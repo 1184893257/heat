@@ -60,7 +60,7 @@ int main()
 				{
 					string text = result.textAfterHit;
 					int hour = text[0] - '0';
-					int minute = atoi(text.substr(1));
+					int minute = atoi(text.c_str() + 1);
 					int seconds = (hour * 60 + minute) * 60;
 					if (now + seconds > config.endTime)
 					{
