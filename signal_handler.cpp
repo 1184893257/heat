@@ -76,6 +76,7 @@ bool captureAndHit(HeatResult& result)
 
 	string beforeHitPicture = captureDir + "before.jpg";
 	capture(beforeHitPicture);
+	rotate(beforeHitPicture, 270);
 	if (0 != access(beforeHitPicture.c_str(), F_OK))
 	{
 		result.status = beforeHitPicture + " capture fail";
@@ -92,6 +93,8 @@ bool captureAndHit(HeatResult& result)
 	hit();
 
 	string afterHitPicture = captureDir + "after.jpg";
+	capture(afterHitPicture);
+	rotate(afterHitPicture, 270);
 	if (0 != access(afterHitPicture.c_str(), F_OK))
 	{
 		result.status = afterHitPicture + " capture fail";
