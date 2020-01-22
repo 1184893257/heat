@@ -1,4 +1,5 @@
 #if defined(__linux__)
+#ifndef NOTPI
 #include <wiringPi.h>
 #include <softPwm.h>
 
@@ -18,4 +19,12 @@ void hit()
 	delay(1000);
 	pinMode(PIN, INPUT);// 停止 PWM 信号输出, 不然会时不时抖动一下
 }
+#else
+void initSG90()
+{
+}
+void hit()
+{
+}
+#endif
 #endif
