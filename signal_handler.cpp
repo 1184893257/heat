@@ -60,6 +60,8 @@ void handleSignal(int signum)
 	}
 }
 
+#ifndef NOTPI
+
 bool captureAndHit(HeatResult& result)
 {
 	string now = getTime();
@@ -110,5 +112,62 @@ bool captureAndHit(HeatResult& result)
 
 	return true;
 }
+
+#else
+	
+static time_t heat_time = 4 * 3600;
+
+void capture(const string& savePath)
+{
+}
+
+string fake_ocr()
+{
+	int left = (int)(config.startTime + heat_time - time(nullptr));
+	if (left < 0)
+		return "";
+	left /= 60;
+	string result;
+	result += (left / 60) + '0';
+	left = left % 60;
+	result += (left / 10) + '0';
+	result += (left % 10) + '0';
+	return result;
+}
+
+bool captureAndHit(HeatResult& result)
+{
+	string now = getTime();
+	result.hitTime = now;
+
+	string captureDir = config.taskDir + now;
+	captureDir += "/";
+	captureDir = path_to_root(captureDir);
+	if (0 != CreateDir(captureDir))
+	{
+		result.status = captureDir + " create fail";
+		return false;
+	}
+
+	result.textBeforeHit = fake_ocr();
+	int textLength = result.textBeforeHit.length();
+	if (textLength != 3)
+	{
+		return false;
+	}
+
+	heat_time += 1800;
+
+	result.textAfterHit = fake_ocr();
+	textLength = result.textAfterHit.length();
+	if (textLength != 3)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+#endif
 
 #endif
