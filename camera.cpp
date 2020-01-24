@@ -6,6 +6,8 @@ using namespace std;
 #if defined(__linux__)
 #include <syslog.h>
 
+#ifndef NOTPI
+
 void capture(const string& savePath)
 {
 	FILE *fp = NULL;
@@ -17,5 +19,13 @@ void capture(const string& savePath)
 	syslog(LOG_INFO, "capture out: %s", buff);
 	pclose(fp);
 }
+
+#else
+
+void capture(const string& savePath)
+{
+}
+
+#endif
 
 #endif

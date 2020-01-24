@@ -117,10 +117,6 @@ bool captureAndHit(HeatResult& result)
 	
 static time_t heat_time = 4 * 3600;
 
-void capture(const string& savePath)
-{
-}
-
 string fake_ocr()
 {
 	int left = (int)(config.startTime + heat_time - time(nullptr));
