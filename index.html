@@ -56,6 +56,18 @@
     </form>
 	
     <form action="/cgi-bin/heat/heat.cgi" method="post" target="iframe">
+		<input type="hidden" name="cmd" value ="loophit"/>
+		<table width="100%" border="1" cellpadding="10">
+		  <tr>
+			<td align="center">
+				<input type="text" name="hour" value="6" /> 小时内
+				<input type="submit" value="循环触发" />
+			</td>
+		  </tr>
+		</table>
+    </form>
+	
+    <form action="/cgi-bin/heat/heat.cgi" method="post" target="iframe">
 		<input type="hidden" name="cmd" value ="snap"/>
 		
 		<table width="100%" border="1" cellpadding="10">
