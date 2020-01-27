@@ -132,7 +132,8 @@ void to_json(json& j, const GlobalConfig& p)
 		json detail = {
 			{ "startTime", p.startTime },
 			{ "endTime", p.endTime },
-			{ "results", p.results }
+			{ "results", p.results },
+			{ "rotate", p.rotate}
 		};
 		if (p.split)
 		{
@@ -156,6 +157,10 @@ void from_json(const json& j, GlobalConfig& p)
 		detail.at("startTime").get_to(p.startTime);
 		detail.at("endTime").get_to(p.endTime);
 		detail.at("results").get_to(p.results);
+		if (detail.contains("rotate"))
+		{
+			detail.at("rotate").get_to(p.rotate);
+		}
 	}
 }
 

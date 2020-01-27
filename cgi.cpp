@@ -26,6 +26,19 @@ void decodeParam(const string& pair, json& req)
 	}
 }
 
+void string_replace(std::string &strBig, const std::string &strsrc, const std::string &strdst)
+{
+    std::string::size_type pos = 0;
+    std::string::size_type srclen = strsrc.size();
+    std::string::size_type dstlen = strdst.size();
+
+    while ((pos = strBig.find(strsrc, pos)) != std::string::npos)
+    {
+        strBig.replace(pos, srclen, strdst);
+        pos += dstlen;
+    }
+}
+
 int main(int argc, char const *argv[], char const *env[])
 {
 	constexpr int SIZE = 1023;
@@ -56,7 +69,7 @@ int main(int argc, char const *argv[], char const *env[])
 		<< "<html>\n"
 		<< "<head><title>welcome to c cgi.</title></head>\n<body>\n";
 
-	string cmd = req["cmd"];
+	string cmd = req["cmd"].get<string>();
 	json rsp;
 	if (cmd == string("clear"))
 	{
@@ -90,6 +103,25 @@ int main(int argc, char const *argv[], char const *env[])
 		clientCall(req, rsp);
 	}
 
+	if (cmd == string("snap"))
+	{
+		string button = R"(
+			<form action="/cgi-bin/heat/heat.cgi" method="post">
+				<input type="hidden" name="cmd" value ="loophit"/>
+				<input type="hidden" name="rotate" value ="ROTATE"/>
+				<table width="100%" border="1" cellpadding="10">
+				  <tr>
+					<td align="center">
+						<input type="text" name="hour" value="6" /> 小时内
+						<input type="submit" value="循环触发" />
+					</td>
+				  </tr>
+				</table>
+			</form>)";
+		string_replace(button, "ROTATE", req["rotate"].get<string>());
+		cout << button;
+	}
+	
 	if (rsp.contains("img"))
 	{
 		// img 自带了双引号

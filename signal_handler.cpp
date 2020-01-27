@@ -28,6 +28,8 @@ void handleSignal(int signum)
 		auto hourStr = req["hour"].get<string>();
 		int seconds = atoi(hourStr.c_str()) * 60 * 60;
 		config.endTime = config.startTime + seconds;
+		auto rot = req["rotate"].get<string>();
+		config.rotate = atof(rot.c_str());
 		config.results.clear();
 
 		string now = getTime();
@@ -46,7 +48,10 @@ void handleSignal(int signum)
 		string path_to_heat = "camera/snap.jpg";
 		string abs_path = path_to_root(path_to_heat);
 		capture(abs_path);
-		rotate(abs_path, rot);
+		if (0 == access(beforeHitPicture.c_str(), F_OK))
+		{
+			rotate(abs_path, rot);
+		}
 		req["ret"] = "snap ok";
 		req["img"] = path_to_webroot(path_to_heat);
 	}
@@ -75,7 +80,7 @@ bool captureAndHit(HeatResult& result)
 
 	string beforeHitPicture = captureDir + "before.jpg";
 	capture(beforeHitPicture);
-	rotate(beforeHitPicture, 270);
+	rotate(beforeHitPicture, config.rotate);
 	if (0 != access(beforeHitPicture.c_str(), F_OK))
 	{
 		result.status = beforeHitPicture + " capture fail";
@@ -93,7 +98,7 @@ bool captureAndHit(HeatResult& result)
 
 	string afterHitPicture = captureDir + "after.jpg";
 	capture(afterHitPicture);
-	rotate(afterHitPicture, 270);
+	rotate(afterHitPicture, config.rotate);
 	if (0 != access(afterHitPicture.c_str(), F_OK))
 	{
 		result.status = afterHitPicture + " capture fail";

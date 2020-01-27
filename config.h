@@ -45,6 +45,7 @@ typedef struct {
 typedef struct {
 	bool split = true;
 	pid_t daemonPid;
+	float rotate;
 	time_t startTime;
     time_t endTime;
 	string taskDir;
