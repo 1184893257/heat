@@ -48,7 +48,7 @@ void handleSignal(int signum)
 		string path_to_heat = "camera/snap.jpg";
 		string abs_path = path_to_root(path_to_heat);
 		capture(abs_path);
-		if (0 == access(beforeHitPicture.c_str(), F_OK))
+		if (0 == access(abs_path.c_str(), F_OK))
 		{
 			rotate(abs_path, rot);
 		}
