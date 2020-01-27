@@ -70,6 +70,7 @@ int main(int argc, char const *argv[], char const *env[])
 		GlobalConfig copy = config;
 		copy.split = false;
 		rsp = copy;
+		rsp.erase("results");
 		
 		if (config.taskDir.length() > 0)
 		{
@@ -94,7 +95,7 @@ int main(int argc, char const *argv[], char const *env[])
 		// img 自带了双引号
 		cout << "<img src=" << rsp["img"] << " alt=\"img\"/>\n";
 	}
-	cout << rsp.dump(4) << endl;
+	cout << rsp.dump() << endl;
 
 	cout << "</body></html>\n";
 	return 0;
