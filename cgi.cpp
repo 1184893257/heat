@@ -65,9 +65,15 @@ int main(int argc, char const *argv[], char const *env[])
 	}
 	
 	const char* endl = "<br>\n";
-	cout << "Content-type:text/html\n\n"
-		<< "<html>\n"
-		<< "<head><title>welcome to c cgi.</title></head>\n<body>\n";
+	cout << R"(Content-type:text/html
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-idth,initial-scale=1">
+		<title>cgi</title>
+	</head>
+<body>)";
 
 	string cmd = req["cmd"].get<string>();
 	json rsp;
@@ -112,8 +118,8 @@ int main(int argc, char const *argv[], char const *env[])
 				<table width="100%" border="1" cellpadding="10">
 				  <tr>
 					<td align="center">
-						<input type="text" name="hour" value="6" /> Ğ¡Ê±ÄÚ
-						<input type="submit" value="Ñ­»·´¥·¢" />
+						<input type="text" name="hour" value="6" /> å°æ—¶å†…
+						<input type="submit" value="å¾ªç¯è§¦å‘" />
 					</td>
 				  </tr>
 				</table>
@@ -124,7 +130,7 @@ int main(int argc, char const *argv[], char const *env[])
 	
 	if (rsp.contains("img"))
 	{
-		// img ×Ô´øÁËË«ÒıºÅ
+		// img è‡ªå¸¦äº†åŒå¼•å·
 		cout << "<img src=" << rsp["img"] << " alt=\"img\"/>\n";
 	}
 	cout << rsp.dump() << endl;
