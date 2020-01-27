@@ -66,6 +66,6 @@ void init_config(bool isDaemon);
 
 void write_config();
 
-string getTime();
+string getTime(time_t* timePtr = nullptr);
 
 int CreateDir(const string& sPathName);
