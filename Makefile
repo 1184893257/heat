@@ -26,6 +26,7 @@ install:
 	cp -f heat.cgi /usr/lib/cgi-bin/heat/heat.cgi
 	chmod u+s /usr/lib/cgi-bin/heat/heat.cgi
 	cp -f daemon /usr/lib/cgi-bin/heat/
+	mkdir -p /var/www/html/heat/
 	cp -f index.html /var/www/html/heat/
 	
 	mkdir -p /usr/lib/systemd/system
