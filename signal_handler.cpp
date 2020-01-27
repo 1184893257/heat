@@ -32,7 +32,7 @@ void handleSignal(int signum)
 		config.rotate = atof(rot.c_str());
 		config.results.clear();
 
-		string now = getTime();
+		string now = getTime(nullptr);
 		string taskDir = "tasks/";
 		taskDir += now;
 		taskDir += "/";
@@ -66,7 +66,7 @@ void handleSignal(int signum)
 
 bool captureAndHit(HeatResult& result)
 {
-	string now = getTime();
+	string now = getTime(nullptr);
 	result.hitTime = now;
 
 	string captureDir = config.taskDir + now;
