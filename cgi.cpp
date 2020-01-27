@@ -90,11 +90,12 @@ int main(int argc, char const *argv[], char const *env[])
 		copy.split = false;
 		rsp = copy;
 		rsp.erase("results");
-		rsp["startTime"] = getTime(&config.startTime);
-		rsp["endTime"] = getTime(&config.endTime);
 		
 		if (config.taskDir.length() > 0)
 		{
+			rsp["startTime"] = getTime(&config.startTime);
+			rsp["endTime"] = getTime(&config.endTime);
+			
 			cout << "<a href=\""
 			  << path_to_webroot(config.taskDir)
 			  << "\" target=\"_blank\">" << config.taskDir << "</a>" << endl;

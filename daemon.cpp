@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <iostream>
 #include "config.h"
 
@@ -15,6 +16,8 @@ bool ocr_debug = false;
 void initSG90();
 void handleSignal(int);
 bool captureAndHit(HeatResult& result);
+void listdir(const char *path, vector<string>& children);
+void del_dir(const char *npath);
 
 int main()
 {
@@ -38,6 +41,20 @@ int main()
 
 		if (config.taskDir.length() > 0)
 		{
+			vector<string> dirs;
+			string tasksDir = path_to_root("tasks");
+			listdir(tasksDir.c_str(), dirs);
+			if (dirs.size() > 10)
+			{
+				for (int i = 0; i < dirs.size() - 10; ++i)
+				{
+					string task(tasksDir);
+					task += "/";
+					task += dirs[i];
+					del_dir(task);
+				}
+			}
+			
 			// 有循环任务
 			time_t now = time(nullptr);
 			if (now > config.endTime)
