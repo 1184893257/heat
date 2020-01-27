@@ -186,7 +186,7 @@ void init_config(bool isDaemon)
 #endif
 }
 
-string getTime(time_t* timePtr)
+string getTime(const time_t* timePtr)
 {
 #ifdef __linux__
 	char buf[40];
