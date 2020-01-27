@@ -75,7 +75,7 @@ int main(int argc, char const *argv[], char const *env[])
 		{
 			cout << "<a href=\""
 			  << path_to_webroot(config.taskDir)
-			  << "\">" << config.taskDir << "</a>" << endl;
+			  << "\" target=\"_blank\">" << config.taskDir << "</a>" << endl;
 		}
 	}
 	else
