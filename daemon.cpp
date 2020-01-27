@@ -51,7 +51,7 @@ int main()
 					string task(tasksDir);
 					task += "/";
 					task += dirs[i];
-					del_dir(task);
+					del_dir(task.c_str());
 				}
 			}
 			
