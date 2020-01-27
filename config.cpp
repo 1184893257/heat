@@ -134,7 +134,14 @@ void to_json(json& j, const GlobalConfig& p)
 			{ "endTime", p.endTime },
 			{ "results", p.results }
 		};
-		writeFile(path_to_root(p.taskDir + CONFIG_NAME), detail.dump(4));
+		if (p.split)
+		{
+			writeFile(path_to_root(p.taskDir + CONFIG_NAME), detail.dump(4));
+		}
+		else
+		{
+			j.merge_patch(detail);
+		}
 	}
 }
 

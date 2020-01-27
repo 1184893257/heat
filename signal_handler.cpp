@@ -21,7 +21,6 @@ void handleSignal(int signum)
 	{
 		hit();
 		req["ret"] = "hit ok";
-		severReply(req);
 	}
 	else if (cmd == string("loophit"))
 	{
@@ -39,7 +38,6 @@ void handleSignal(int signum)
 		config.taskDir = taskDir;
 		write_config();
 		req["ret"] = "loophit ok";
-		severReply(req);
 	}
 	else if (cmd == string("snap"))
 	{
@@ -51,13 +49,12 @@ void handleSignal(int signum)
 		rotate(abs_path, rot);
 		req["ret"] = "snap ok";
 		req["img"] = path_to_webroot(path_to_heat);
-		severReply(req);
 	}
 	else
 	{
 		req["ret"] = "unknown cmd";
-		severReply(req);
 	}
+	severReply(req);
 }
 
 #ifndef NOTPI

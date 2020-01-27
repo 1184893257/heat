@@ -50,40 +50,51 @@ int main(int argc, char const *argv[], char const *env[])
 			break;
 		}
 	}
-
-	string cmd = req["cmd"];
-  json rsp;
-	if (cmd == string("clear"))
-  {
-	  vector<json> v;
-	  clear(v);
-	  rsp["msgs"] = v;
-  }
-	else
-  {
-    init_config(false);
-
-#if defined(__linux__)
-    kill(config.daemonPid, SIGUSR1);
-#endif
-
-    clientCall(req, rsp);
-  }
-
+	
 	const char* endl = "<br>\n";
 	cout << "Content-type:text/html\n\n"
 		<< "<html>\n"
 		<< "<head><title>welcome to c cgi.</title></head>\n<body>\n";
+
+	string cmd = req["cmd"];
+	json rsp;
+	if (cmd == string("clear"))
+	{
+		vector<json> v;
+		clear(v);
+		rsp["msgs"] = v;
+	}
+	else if (cmd == string("status"))
+	{
+		init_config(false);
+		GlobalConfig copy = config;
+		copy.split = false;
+		rsp = copy;
+		
+		if (config.taskDir.length() > 0)
+		{
+			cout << "<a href=\""
+			  << path_to_webroot(config.taskDir)
+			  << "\">" << config.taskDir << "</a>" << endl;
+		}
+	}
+	else
+	{
+		init_config(false);
+
+#if defined(__linux__)
+		kill(config.daemonPid, SIGUSR1);
+#endif
+
+		clientCall(req, rsp);
+	}
 
 	if (rsp.contains("img"))
 	{
 		// img 自带了双引号
 		cout << "<img src=" << rsp["img"] << " alt=\"img\"/>\n";
 	}
-	else
-	{
-		cout << rsp.dump() << endl;
-	}
+	cout << rsp.dump(4) << endl;
 
 	cout << "</body></html>\n";
 	return 0;

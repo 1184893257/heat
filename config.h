@@ -43,6 +43,7 @@ typedef struct {
 }HeatResult;
 
 typedef struct {
+	bool split = true;
 	pid_t daemonPid;
 	time_t startTime;
     time_t endTime;
