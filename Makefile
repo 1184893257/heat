@@ -22,9 +22,10 @@ clean:
 	rm heat.cgi daemon ocr_main
 
 install:
-	cp -f heat.cgi /var/www/html/heat/bin/heat.cgi
-	chmod u+s /var/www/html/heat/bin/heat.cgi
-	cp -f daemon /var/www/html/heat/bin/
+	mkdir -p /usr/lib/cgi-bin/heat/
+	cp -f heat.cgi /usr/lib/cgi-bin/heat/heat.cgi
+	chmod u+s /usr/lib/cgi-bin/heat/heat.cgi
+	cp -f daemon /usr/lib/cgi-bin/heat/
 	cp -f index.html /var/www/html/heat/
 	
 	mkdir -p /usr/lib/systemd/system

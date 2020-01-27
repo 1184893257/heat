@@ -6,7 +6,7 @@ After=network.target
 Type=forking
 Restart=on-failure
 RestartSec=5s
-ExecStart=/var/www/html/heat/bin/daemon
+ExecStart=/usr/lib/cgi-bin/heat/daemon
 
 [Install]
 WantedBy=multi-user.target
