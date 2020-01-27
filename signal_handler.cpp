@@ -135,7 +135,7 @@ string fake_ocr()
 
 bool captureAndHit(HeatResult& result)
 {
-	string now = getTime();
+	string now = getTime(nullptr);
 	result.hitTime = now;
 
 	string captureDir = config.taskDir + now;
