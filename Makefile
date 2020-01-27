@@ -18,8 +18,8 @@ ocr_main: ocr.o ocr_main.o
 	$(CC) $(CXXFLAGS) $(LDFLAGS) -o ocr_main $^ $(CV_LIBS)
 
 clean:
-	rm *.o
-	rm heat.cgi daemon ocr_main
+	rm -f *.o
+	rm -f heat.cgi daemon ocr_main
 
 install:
 	mkdir -p /usr/lib/cgi-bin/heat/
