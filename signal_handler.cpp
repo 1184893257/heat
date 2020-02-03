@@ -11,6 +11,8 @@ void capture(const string& savePath);
 void rotate(const string& path, float rot);
 string ocr(const string& picturePath);
 
+static time_t heat_time = 4 * 3600;
+
 void handleSignal(int signum)
 {
 	json req;
@@ -24,6 +26,7 @@ void handleSignal(int signum)
 	}
 	else if (cmd == string("loophit"))
 	{
+		heat_time = 4 * 3600;
 		config.startTime = time(nullptr);
 		auto hourStr = req["hour"].get<string>();
 		int seconds = atoi(hourStr.c_str()) * 60 * 60;
@@ -117,7 +120,6 @@ bool captureAndHit(HeatResult& result)
 
 #else
 	
-static time_t heat_time = 4 * 3600;
 
 string fake_ocr()
 {
