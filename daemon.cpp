@@ -30,8 +30,8 @@ int main()
 	for (;;)
 	{
 		// 出错了5分钟后尝试一次
-		//unsigned int sleepTime = (hasError ? 5 : 30) * 60;
-		unsigned int sleepTime = 60;
+		unsigned int sleepTime = (hasError ? 5 : 30) * 60;
+		//unsigned int sleepTime = 60;
 		hasError = false;
 		while (sleepTime > 0)
 		{
