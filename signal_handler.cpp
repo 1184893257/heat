@@ -48,6 +48,7 @@ void handleSignal(int signum)
 	{
 		auto rot_str = req["rotate"].get<string>();
 		float rot = (float)atof(rot_str.c_str());
+		CreateDir(path_to_root("camera"));
 		string path_to_heat = "camera/snap.jpg";
 		string abs_path = path_to_root(path_to_heat);
 		capture(abs_path);
