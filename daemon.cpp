@@ -38,6 +38,8 @@ int main()
 			// 来信号了会被打断，返回值是剩余没睡的时间
 			sleepTime = sleep(sleepTime);
 		}
+		
+		syslog(LOG_INFO, "heat wake up");
 
 		if (config.taskDir.length() > 0)
 		{
@@ -72,6 +74,8 @@ int main()
 					result.status = hasError ? "Error" : "Normal";
 				}
 				config.results.push_back(result);
+				
+				syslog(LOG_INFO, "captureAndHit result=%s", result.status.c_str());
 
 				if (!hasError)
 				{
