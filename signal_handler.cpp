@@ -73,6 +73,7 @@ void handleSignal(int signum)
 			rotate(abs_path, rot, getClip(req));
 		}
 		req["ret"] = "snap ok";
+		req["ocr"] = ocr(abs_path);
 		req["img"] = path_to_webroot(path_to_heat);
 	}
 	else
