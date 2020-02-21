@@ -43,7 +43,7 @@ void rotate(const string& path, float rot, vector<int> clip)
 	Rect clipRect(Point(0, 0), image.size());
 	if (clip.size() == 4)
 	{
-		clipRect = Rect(clip[0], clip[1], image.cols - clip[2], image.rows - clip(3));
+		clipRect = Rect(clip[0], clip[1], image.cols - clip[2], image.rows - clip[3]);
 	}
 
 	imwrite(path, image(clipRect));
