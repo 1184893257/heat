@@ -127,7 +127,7 @@ int main(int argc, char const *argv[], char const *env[])
 				  </tr>
 				</table>
 			</form>)";
-		string_replace(button, "REQ", req.dump());
+		string_replace(button, "REQ", rsp.dump());
 		cout << button;
 	}
 	
