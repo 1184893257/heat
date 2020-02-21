@@ -18,7 +18,7 @@ void clear(vector<json>& v);
 void decodeParam(const string& pair, json& req)
 {
 	int mid = pair.find('=');
-	if (mid > 0 && mid < pair.length() - 1)
+	if (mid > 0)
 	{
 		string key = urldecode(pair.substr(0, mid));
 		string value = urldecode(pair.substr(mid + 1));
@@ -127,7 +127,7 @@ int main(int argc, char const *argv[], char const *env[])
 				  </tr>
 				</table>
 			</form>)";
-		string_replace(button, "REQ", rsp.dump());
+		string_replace(button, "REQ", req.dump());
 		cout << button;
 	}
 	

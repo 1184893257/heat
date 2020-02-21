@@ -102,28 +102,7 @@ int main()
 #include <vector>
 int main()
 {
-  GlobalConfig a = {
-          1,
-          2,
-          3,
-          "20200119/",
-          {
-                  {
-                    "111",
-                    "222",
-                    "3",
-                    "4"
-                  }
-          }
-  };
-  // config = a;
-  read_struct(path_to_root("config.json"), config);
-  // cout << config.daemonPid << endl;
-
-  string sa = "123";
-  string sb = sa + "456";
-  cout << sa << endl << sb << endl;
-
+	cout << string("123").substr(3) << endl;
   //write_config();
 	return 0;
 }
