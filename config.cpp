@@ -133,7 +133,8 @@ void to_json(json& j, const GlobalConfig& p)
 			{ "startTime", p.startTime },
 			{ "endTime", p.endTime },
 			{ "results", p.results },
-			{ "rotate", p.rotate}
+			{ "rotate", p.rotate},
+			{ "clip", p.clip}
 		};
 		if (p.split)
 		{
@@ -160,6 +161,10 @@ void from_json(const json& j, GlobalConfig& p)
 		if (detail.contains("rotate"))
 		{
 			detail.at("rotate").get_to(p.rotate);
+		}
+		if (detail.contains("clip"))
+		{
+			detail.at("clip").get_to(p.clip);
 		}
 	}
 }

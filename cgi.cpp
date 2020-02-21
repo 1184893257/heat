@@ -117,7 +117,7 @@ int main(int argc, char const *argv[], char const *env[])
 		string button = R"(
 			<form action="/cgi-bin/heat/heat.cgi" method="post">
 				<input type="hidden" name="cmd" value ="loophit"/>
-				<input type="hidden" name="rotate" value ="ROTATE"/>
+				<input type="hidden" name="req" value ="REQ"/>
 				<table width="100%" border="1" cellpadding="10">
 				  <tr>
 					<td align="center">
@@ -127,7 +127,7 @@ int main(int argc, char const *argv[], char const *env[])
 				  </tr>
 				</table>
 			</form>)";
-		string_replace(button, "ROTATE", req["rotate"].get<string>());
+		string_replace(button, "REQ", req.dump());
 		cout << button;
 	}
 	

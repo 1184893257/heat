@@ -35,11 +35,18 @@ void rotate(Mat& input, float avAng)
 	input = output;
 }
 
-void rotate(const string& path, float rot)
+void rotate(const string& path, float rot, vector<int> clip)
 {
 	Mat image = imread(path, cv::IMREAD_UNCHANGED);
 	rotate(image, rot);
-	imwrite(path, image);
+
+	Rect clipRect(Point(0, 0), image.size());
+	if (clip.size() == 4)
+	{
+		clipRect = Rect(clip[0], clip[1], image.cols - clip[2], image.rows - clip(3));
+	}
+
+	imwrite(path, image(clipRect));
 }
 
 // 自动做倾斜校正, 倾斜角度必须在30度以内

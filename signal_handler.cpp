@@ -13,6 +13,19 @@ string ocr(const string& picturePath);
 
 static time_t heat_time = 4 * 3600;
 
+static vector<int> getClip(const json& req)
+{
+	vector<int> clip;
+	auto getInt = [&](const char* name) {
+		auto val = req[name].get<string>();
+		return atoi(val.c_str());
+	};
+	clip.push_back(getInt("L"));
+	clip.push_back(getInt("T"));
+	clip.push_back(getInt("R"));
+	clip.push_back(getInt("B"));
+}
+
 void handleSignal(int signum)
 {
 	json req;
@@ -33,6 +46,8 @@ void handleSignal(int signum)
 		config.endTime = config.startTime + seconds;
 		auto rot = req["rotate"].get<string>();
 		config.rotate = atof(rot.c_str());
+		auto snapreq = req["req"].get<string>();
+		config.clip = getClip(json::parse(snapreq));
 		config.results.clear();
 
 		string now = getTime();
@@ -54,7 +69,7 @@ void handleSignal(int signum)
 		capture(abs_path);
 		if (0 == access(abs_path.c_str(), F_OK))
 		{
-			rotate(abs_path, rot);
+			rotate(abs_path, rot, getClip(req));
 		}
 		req["ret"] = "snap ok";
 		req["img"] = path_to_webroot(path_to_heat);
@@ -84,7 +99,7 @@ bool captureAndHit(HeatResult& result)
 
 	string beforeHitPicture = captureDir + "before.jpg";
 	capture(beforeHitPicture);
-	rotate(beforeHitPicture, config.rotate);
+	rotate(beforeHitPicture, config.rotate, config.clip);
 	if (0 != access(beforeHitPicture.c_str(), F_OK))
 	{
 		result.status = beforeHitPicture + " capture fail";
@@ -102,7 +117,7 @@ bool captureAndHit(HeatResult& result)
 
 	string afterHitPicture = captureDir + "after.jpg";
 	capture(afterHitPicture);
-	rotate(afterHitPicture, config.rotate);
+	rotate(afterHitPicture, config.rotate, config.clip);
 	if (0 != access(afterHitPicture.c_str(), F_OK))
 	{
 		result.status = afterHitPicture + " capture fail";

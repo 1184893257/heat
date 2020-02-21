@@ -49,6 +49,7 @@ typedef struct {
 	time_t startTime;
     time_t endTime;
 	string taskDir;
+	vector<int> clip;
 	vector<HeatResult> results;
 }GlobalConfig;
 

@@ -1,0 +1,10 @@
+{
+    "files.encoding": "gbk",
+    "files.associations": {
+        "xutility": "cpp",
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "deque": "cpp",
+        "xtree": "cpp"
+    }
+}
