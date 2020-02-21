@@ -35,7 +35,7 @@ void rotate(Mat& input, float avAng)
 	input = output;
 }
 
-void rotate(const string& path, float rot, vector<int> clip)
+void rotate(const string& path, float rot, const vector<int>& clip)
 {
 	Mat image = imread(path, cv::IMREAD_UNCHANGED);
 	rotate(image, rot);

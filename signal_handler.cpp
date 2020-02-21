@@ -8,7 +8,7 @@ using json = nlohmann::json;
 
 void hit();
 void capture(const string& savePath);
-void rotate(const string& path, float rot, vector<int>& clip);
+void rotate(const string& path, float rot, const vector<int>& clip);
 string ocr(const string& picturePath);
 
 static time_t heat_time = 4 * 3600;
@@ -24,6 +24,7 @@ static vector<int> getClip(const json& req)
 	clip.push_back(getInt("T"));
 	clip.push_back(getInt("R"));
 	clip.push_back(getInt("B"));
+	return clip;
 }
 
 void handleSignal(int signum)
