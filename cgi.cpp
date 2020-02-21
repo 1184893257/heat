@@ -80,7 +80,9 @@ int main(int argc, char const *argv[], char const *env[])
 	if (cmd == string("clear"))
 	{
 		vector<json> v;
+#if defined(__linux__)
 		clear(v);
+#endif
 		rsp["msgs"] = v;
 	}
 	else if (cmd == string("status"))
@@ -107,9 +109,8 @@ int main(int argc, char const *argv[], char const *env[])
 
 #if defined(__linux__)
 		kill(config.daemonPid, SIGUSR1);
-#endif
-
 		clientCall(req, rsp);
+#endif
 	}
 
 	if (cmd == string("snap"))

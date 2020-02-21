@@ -15,7 +15,7 @@ using json = nlohmann::json;
 typedef struct
 {
 	long msgType;
-	char json[100];
+	char json[200];
 }Msg;
 
 constexpr int PROJECT_ID = 'h';
