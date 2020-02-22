@@ -312,7 +312,7 @@ string ocr(const string& picturePath, int min, int max)
 	for (auto& option : options)
 	{
 		ret = try_ocr(picturePath, min, max, option);
-		if (ret.length() >= 3)
+		if (ret.length() == 3)
 			break;
 	}
 	imwrite(picturePath + ".debug.png", debugMat);
