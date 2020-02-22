@@ -311,7 +311,7 @@ string ocr(const string& picturePath, int min, int max)
 	string ret;
 	for (auto& option : options)
 	{
-		string ret = try_ocr(picturePath, min, max, option);
+		ret = try_ocr(picturePath, min, max, option);
 		if (ret.length() >= 3)
 			break;
 	}
