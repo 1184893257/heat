@@ -22,13 +22,13 @@ static int getInt(const json& req, const char* name)
 static vector<int> getClip(const json& req)
 {
 	vector<int> clip;
-	auto getInt = [&](const char* name) {
+	auto getInt_ = [&](const char* name) {
 		return getInt(req, name);
 	};
-	clip.push_back(getInt("L"));
-	clip.push_back(getInt("T"));
-	clip.push_back(getInt("R"));
-	clip.push_back(getInt("B"));
+	clip.push_back(getInt_("L"));
+	clip.push_back(getInt_("T"));
+	clip.push_back(getInt_("R"));
+	clip.push_back(getInt_("B"));
 	return clip;
 }
 
