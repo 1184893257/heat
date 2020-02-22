@@ -69,7 +69,7 @@ int main(int argc, char const *argv[], char const *env[])
 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=GBK" />
 		<meta name="viewport" content="width=device-idth,initial-scale=1">
 		<title>cgi</title>
 	</head>
