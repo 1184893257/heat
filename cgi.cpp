@@ -122,8 +122,8 @@ int main(int argc, char const *argv[], char const *env[])
 				<table width="100%" border="1" cellpadding="10">
 				  <tr>
 					<td align="center">
-						<input type="text" name="hour" value="6" /> å°æ—¶å†…
-						<input type="submit" value="å¾ªç¯è§¦å‘" />
+						<input type="text" name="hour" value="6" /> Ğ¡Ê±ÄÚ
+						<input type="submit" value="Ñ­»·´¥·¢" />
 					</td>
 				  </tr>
 				</table>
@@ -132,10 +132,13 @@ int main(int argc, char const *argv[], char const *env[])
 		cout << button;
 	}
 	
-	if (rsp.contains("img"))
+	if (rsp.contains("imgs"))
 	{
-		// img è‡ªå¸¦äº†åŒå¼•å·
-		cout << "<img src=" << rsp["img"] << " alt=\"img\"/>\n";
+		for (auto& img : rsp["imgs"])
+		{
+			// ×Ô´øÁËË«ÒıºÅ
+			cout << "<img src=" << img << " alt=\"img\"/>\n";
+		}
 	}
 	cout << rsp.dump() << endl;
 

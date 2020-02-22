@@ -238,6 +238,8 @@ string try_ocr(const string& picturePath, const OCR_OPTION& option)
 	threshold(image_gry, image_bin, 225, 255, THRESH_BINARY); // convert to binary image
 	DEBUG imshow("image_bin", image_bin);
 
+	imwrite(picturePath + ".bin.png", image_bin);
+
 	Mat& image_ero = image_gry;
 	Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
 	erode(image_bin, image_ero, element);

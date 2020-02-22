@@ -74,7 +74,10 @@ void handleSignal(int signum)
 		}
 		req["ret"] = "snap ok";
 		req["ocr"] = ocr(abs_path);
-		req["img"] = path_to_webroot(path_to_heat);
+		vector<string> imgs;
+		imgs.push_back(path_to_webroot(path_to_heat));
+		imgs.push_back(path_to_webroot(path_to_heat) + ".bin.png");
+		req["imgs"] = imgs;
 	}
 	else
 	{

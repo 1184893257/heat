@@ -102,7 +102,14 @@ int main()
 #include <vector>
 int main()
 {
-	cout << string("123").substr(3) << endl;
+	vector<string> v;
+	v.push_back("123");
+	json j;
+	j["a"] = v;
+	for (auto& item : j["a"])
+	{
+		cout << item << endl;
+	}
   //write_config();
 	return 0;
 }
