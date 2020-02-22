@@ -4,6 +4,7 @@
 using namespace std;
 
 string ocr(const string&);
+string ocr(const string& picturePath, int min, int max);
 
 bool ocr_debug = false;
 
@@ -11,7 +12,7 @@ int main()
 {
 	if (ocr_debug)
 	{
-		cout << ocr("snap.jpg") << endl;
+		cout << ocr("snap.jpg", 150, 250) << endl;
 	}
 	else
 	{

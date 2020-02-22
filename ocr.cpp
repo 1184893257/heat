@@ -9,6 +9,8 @@ using namespace cv;
 extern bool ocr_debug;
 #define DEBUG if (ocr_debug)
 
+Mat debugMat;
+
 // 无缺失旋转，可输入任何图片
 void rotate(Mat& input, float avAng)
 {
@@ -118,14 +120,25 @@ void cutNums(const Mat& input, vector<Mat>& output)
 		}
 	}
 
-	DEBUG {
+	{
 		Mat dest;
 		cvtColor(input, dest, COLOR_GRAY2RGB);
 		for (auto& rect : num_location)
 		{
 			rectangle(dest, rect, Scalar(0, 0, 255), 1);
 		}
-		imshow("rects", dest);
+		DEBUG imshow("rects", dest);
+
+		if (debugMat.cols == 0)
+		{
+			debugMat = dest;
+		}
+		else
+		{
+			Mat tmp;
+			hconcat(debugMat, dest, tmp);
+			debugMat = tmp;
+		}
 	}
 
 	// 过滤高度不对的
@@ -241,8 +254,6 @@ string try_ocr(const string& picturePath, int min, int max, const OCR_OPTION& op
 	threshold(image_bin0, image_bin, min, 255, THRESH_BINARY);
 	DEBUG imshow("image_bin", image_bin);
 
-	imwrite(picturePath + ".bin.png", image_bin);
-
 	Mat& image_ero = image_bin0;
 	Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
 	erode(image_bin, image_ero, element);
@@ -289,19 +300,28 @@ string ocr(const string& picturePath, int min, int max)
 		},
 		{
 			{1, 6}// 窄一点避免粘连上冒号
+		},
+		{
+			{1, 10}
 		}
 	};
 
+	debugMat = Mat();
+
+	string ret;
 	for (auto& option : options)
 	{
 		string ret = try_ocr(picturePath, min, max, option);
 		if (ret.length() >= 3)
-			return ret;
+			break;
 	}
-	return "";
+	imwrite(picturePath + ".debug.png", debugMat);
+	DEBUG imshow("debugMat", debugMat);
+	DEBUG waitKey(0);
+	return ret;
 }
 
 string ocr(const string& picturePath)
 {
-	ocr(picturePath, 225, 250);
+	return ocr(picturePath, 225, 250);
 }

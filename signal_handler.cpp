@@ -83,7 +83,7 @@ void handleSignal(int signum)
 		req["ocr"] = ocr(abs_path, getInt(req, "min"), getInt(req, "max"));
 		vector<string> imgs;
 		imgs.push_back(path_to_webroot(path_to_heat));
-		imgs.push_back(path_to_webroot(path_to_heat) + ".bin.png");
+		imgs.push_back(path_to_webroot(path_to_heat) + ".debug.png");
 		req["imgs"] = imgs;
 	}
 	else
