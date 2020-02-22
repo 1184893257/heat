@@ -291,20 +291,25 @@ string try_ocr(const string& picturePath, int min, int max, const OCR_OPTION& op
 	return result;
 }
 
+
+auto options = vector<OCR_OPTION>
+{
+	{
+		{3, 10}
+	},
+	{
+		{1, 10}
+	},
+	{
+		{3, 6}// 宽一点避免5被上下分隔
+	},
+	{
+		{1, 6}// 窄一点避免粘连上冒号
+	}
+};
+
 string ocr(const string& picturePath, int min, int max)
 {
-	auto options = vector<OCR_OPTION>
-	{
-		{
-			{3, 6}// 宽一点避免5被上下分隔
-		},
-		{
-			{1, 6}// 窄一点避免粘连上冒号
-		},
-		{
-			{1, 10}
-		}
-	};
 
 	debugMat = Mat();
 
@@ -313,7 +318,12 @@ string ocr(const string& picturePath, int min, int max)
 	{
 		ret = try_ocr(picturePath, min, max, option);
 		if (ret.length() == 3)
+		{
+			auto tmp = option;
+			option = options[0];
+			options[0] = tmp;
 			break;
+		}
 	}
 	imwrite(picturePath + ".debug.png", debugMat);
 	DEBUG imshow("debugMat", debugMat);
