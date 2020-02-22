@@ -8,7 +8,7 @@ CV_LIBS = `pkg-config --libs opencv`
 
 LDFLAGS += -Wl,--as-needed
 
-heat.cgi: cgi.o ipc.o urldecoder.o config.o
+heat.cgi: cgi.o ipc.o urldecoder.o config.o base64.o
 	$(CC) $(CXXFLAGS) $(LDFLAGS) -o heat.cgi $^
 
 daemon: daemon.o ipc.o sg90.o camera.o ocr.o config.o signal_handler.o dir.o
