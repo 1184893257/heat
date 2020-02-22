@@ -50,9 +50,9 @@ void handleSignal(int signum)
 		auto hourStr = req["hour"].get<string>();
 		int seconds = atoi(hourStr.c_str()) * 60 * 60;
 		config.endTime = config.startTime + seconds;
-		auto rot = req["rotate"].get<string>();
-		config.rotate = atof(rot.c_str());
 		auto snapreq = json::parse(req["req"].get<string>());
+		auto rot = snapreq["rotate"].get<string>();
+		config.rotate = atof(rot.c_str());
 		config.clip = getClip(snapreq);
 		config.gray_min = getInt(snapreq, "min");
 		config.gray_max = getInt(snapreq, "max");
