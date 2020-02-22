@@ -134,7 +134,9 @@ void to_json(json& j, const GlobalConfig& p)
 			{ "endTime", p.endTime },
 			{ "results", p.results },
 			{ "rotate", p.rotate},
-			{ "clip", p.clip}
+			{ "clip", p.clip},
+			{ "gray_min", p.gray_min},
+			{ "gray_max", p.gray_max}
 		};
 		if (p.split)
 		{
@@ -165,6 +167,11 @@ void from_json(const json& j, GlobalConfig& p)
 		if (detail.contains("clip"))
 		{
 			detail.at("clip").get_to(p.clip);
+		}
+		if (detail.contains("gray_min"))
+		{
+			detail.at("gray_min").get_to(p.gray_min);
+			detail.at("gray_max").get_to(p.gray_max);
 		}
 	}
 }

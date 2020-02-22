@@ -9,16 +9,21 @@ using json = nlohmann::json;
 void hit();
 void capture(const string& savePath);
 void rotate(const string& path, float rot, const vector<int>& clip);
-string ocr(const string& picturePath);
+string ocr(const string& picturePath, int min, int max)
 
 static time_t heat_time = 4 * 3600;
+
+static int getInt(const json& req, const char* name)
+{
+	auto val = req[name].get<string>();
+	return atoi(val.c_str());
+}
 
 static vector<int> getClip(const json& req)
 {
 	vector<int> clip;
 	auto getInt = [&](const char* name) {
-		auto val = req[name].get<string>();
-		return atoi(val.c_str());
+		return getInt(req, name);
 	};
 	clip.push_back(getInt("L"));
 	clip.push_back(getInt("T"));
@@ -47,8 +52,10 @@ void handleSignal(int signum)
 		config.endTime = config.startTime + seconds;
 		auto rot = req["rotate"].get<string>();
 		config.rotate = atof(rot.c_str());
-		auto snapreq = req["req"].get<string>();
-		config.clip = getClip(json::parse(snapreq));
+		auto snapreq = json::parse(req["req"].get<string>());
+		config.clip = getClip(snapreq);
+		config.gray_min = getInt(snapreq, "min");
+		config.gray_max = getInt(snapreq, "max");
 		config.results.clear();
 
 		string now = getTime();
@@ -73,7 +80,7 @@ void handleSignal(int signum)
 			rotate(abs_path, rot, getClip(req));
 		}
 		req["ret"] = "snap ok";
-		req["ocr"] = ocr(abs_path);
+		req["ocr"] = ocr(abs_path, getInt(req, "min"), getInt(req, "max"));
 		vector<string> imgs;
 		imgs.push_back(path_to_webroot(path_to_heat));
 		imgs.push_back(path_to_webroot(path_to_heat) + ".bin.png");
@@ -111,7 +118,7 @@ bool captureAndHit(HeatResult& result)
 		return false;
 	}
 
-	result.textBeforeHit = ocr(beforeHitPicture);
+	result.textBeforeHit = ocr(beforeHitPicture, config.gray_min, config.gray_max);
 	int textLength = result.textBeforeHit.length();
 	if (textLength != 3)
 	{
@@ -129,7 +136,7 @@ bool captureAndHit(HeatResult& result)
 		return false;
 	}
 
-	result.textAfterHit = ocr(afterHitPicture);
+	result.textAfterHit = ocr(afterHitPicture, config.gray_min, config.gray_max);
 	textLength = result.textAfterHit.length();
 	if (textLength != 3)
 	{

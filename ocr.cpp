@@ -224,23 +224,26 @@ typedef struct
 	Size2i dilateSize;
 }OCR_OPTION;
 
-string try_ocr(const string& picturePath, const OCR_OPTION& option)
+string try_ocr(const string& picturePath, int min, int max, const OCR_OPTION& option)
 {
 	cv::Mat image = cv::imread(picturePath, cv::IMREAD_GRAYSCALE);
 
-	Mat image_gry = image;
-	// resize(image, image_gry, Size(image.cols / 6, image.rows / 6));
+	Mat image_resized = image;
+	// resize(image, image_resized, Size(image.cols / 6, image.rows / 6));
 
 	Mat originCopy;
-	DEBUG cvtColor(image_gry, originCopy, COLOR_GRAY2RGB);
+	DEBUG cvtColor(image_resized, originCopy, COLOR_GRAY2RGB);
 
-	Mat& image_bin = image;
-	threshold(image_gry, image_bin, 225, 255, THRESH_BINARY); // convert to binary image
+ 	// convert to binary image
+	Mat& image_bin0 = image;
+	threshold(image_resized, image_bin0, max, 255, THRESH_TOZERO_INV);
+	Mat& image_bin = image_resized;
+	threshold(image_bin0, image_bin, min, 255, THRESH_BINARY);
 	DEBUG imshow("image_bin", image_bin);
 
 	imwrite(picturePath + ".bin.png", image_bin);
 
-	Mat& image_ero = image_gry;
+	Mat& image_ero = image_bin0;
 	Mat element = getStructuringElement(MORPH_RECT, Size(2, 2));
 	erode(image_bin, image_ero, element);
 	DEBUG imshow("image_ero", image_ero);
@@ -277,7 +280,7 @@ string try_ocr(const string& picturePath, const OCR_OPTION& option)
 	return result;
 }
 
-string ocr(const string& picturePath)
+string ocr(const string& picturePath, int min, int max)
 {
 	auto options = vector<OCR_OPTION>
 	{
@@ -291,9 +294,14 @@ string ocr(const string& picturePath)
 
 	for (auto& option : options)
 	{
-		string ret = try_ocr(picturePath, option);
+		string ret = try_ocr(picturePath, min, max, option);
 		if (ret.length() >= 3)
 			return ret;
 	}
 	return "";
+}
+
+string ocr(const string& picturePath)
+{
+	ocr(picturePath, 225, 250);
 }

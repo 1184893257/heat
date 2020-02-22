@@ -48,6 +48,8 @@ typedef struct {
 	float rotate;
 	time_t startTime;
     time_t endTime;
+	int gray_min;
+	int gray_max;
 	string taskDir;
 	vector<int> clip;
 	vector<HeatResult> results;
