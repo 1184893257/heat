@@ -90,6 +90,7 @@ void handleSignal(int signum)
 	{
 		req["ret"] = "unknown cmd";
 	}
+	syslog(LOG_INFO, "finish cmd: %s", cmd.c_str());
 	severReply(req);
 }
 

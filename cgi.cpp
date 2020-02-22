@@ -8,6 +8,7 @@
 #if defined(__linux__)
 #include <sys/types.h>
 #include <signal.h>
+#include <syslog.h>
 #endif
 
 using namespace std;
@@ -119,6 +120,8 @@ int main(int argc, char const *argv[], char const *env[])
 		clientCall(req, rsp);
 #endif
 	}
+
+	syslog(LOG_INFO, "cgi finish cmd: %s", cmd.c_str());
 
 	if (cmd == string("snap"))
 	{
