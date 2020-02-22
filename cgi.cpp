@@ -4,6 +4,7 @@
 #include <vector>
 #include "ipc.h"
 #include "config.h"
+#include "base64.h"
 #if defined(__linux__)
 #include <sys/types.h>
 #include <signal.h>
@@ -77,6 +78,12 @@ int main(int argc, char const *argv[], char const *env[])
 
 	string cmd = req["cmd"].get<string>();
 	json rsp;
+	if (cmd == string("loophit"))
+	{
+		auto snapreq = req["req"].get<string>();
+		req["req"] = base64_decode(snapreq);
+	}
+
 	if (cmd == string("clear"))
 	{
 		vector<json> v;
@@ -128,7 +135,9 @@ int main(int argc, char const *argv[], char const *env[])
 				  </tr>
 				</table>
 			</form>)";
-		string_replace(button, "REQ", req.dump());
+		auto reqStr = req.dump();
+		auto ucharPtr = (unsigned char const*)(reqStr.c_str());
+		string_replace(button, "REQ", base64_encode(ucharPtr, reqStr.length()));
 		cout << button;
 	}
 	

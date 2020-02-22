@@ -1,7 +1,7 @@
 #include <string>
 using namespace std;
 
-//è§£urlç¼–ç å®ç° 
+//½âurl±àÂëÊµÏÖ 
 string urldecode(const string& encd)
 {
 	int buf;
