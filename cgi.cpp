@@ -121,7 +121,7 @@ int main(int argc, char const *argv[], char const *env[])
 #endif
 	}
 
-	syslog(LOG_INFO, "cgi finish cmd: %s", cmd.c_str());
+	syslog(LOG_INFO, "cgi remote return, cmd: %s", cmd.c_str());
 
 	if (cmd == string("snap"))
 	{
@@ -155,5 +155,6 @@ int main(int argc, char const *argv[], char const *env[])
 	cout << rsp.dump() << endl;
 
 	cout << "</body></html>\n";
+	syslog(LOG_INFO, "cgi finish cmd: %s", cmd.c_str());
 	return 0;
 }
