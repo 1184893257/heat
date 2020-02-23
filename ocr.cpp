@@ -1,6 +1,5 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include <mutex>
 #include <algorithm>
 #include <cassert>
 #include "ocr.h"
@@ -15,42 +14,6 @@ typedef struct
 {
 	Size2i dilateSize;
 } OCR_OPTION;
-
-
-class OptionPicker
-{
-public:
-	void get(vector<OCR_OPTION>& options)
-	{
-		lock_guard<std::mutex> guard(mutex_);
-		options = list;
-	}
-
-	void update(const vector<OCR_OPTION>& options)
-	{
-		lock_guard<std::mutex> guard(mutex_);
-		list = options;
-	}
-private:
-	vector<OCR_OPTION> list
-	{
-		{
-			{3, 10}
-		},
-		{
-			{1, 10}
-		},
-		{
-			{3, 6}// 宽一点避免5被上下分隔
-		},
-		{
-			{1, 6}// 窄一点避免粘连上冒号
-		}
-	};
-	std::mutex mutex_;
-};
-OptionPicker optionPicker;
-
 
 class OCRBuilderImpl : public OCRBuilder
 {
@@ -73,8 +36,25 @@ public:
 	string path;
 	int min = 225;
 	int max = 250;
-	OCR_OPTION option;
+	OCR_OPTION currentOption;
 	Mat debugMat;
+
+private:
+	vector<OCR_OPTION> options
+	{
+		{
+			{3, 10}
+		},
+		{
+			{1, 10}
+		},
+		{
+			{3, 6}// 宽一点避免5被上下分隔
+		},
+		{
+			{1, 6}// 窄一点避免粘连上冒号
+		}
+	};
 };
 
 
@@ -341,7 +321,7 @@ string OCRImpl::ocr()
 	autoRotate(image_ero, originCopy);
 
 	Mat& image_dil = image_bin;
-	element = getStructuringElement(MORPH_RECT, params->option.dilateSize);
+	element = getStructuringElement(MORPH_RECT, params->currentOption.dilateSize);
 	dilate(image_ero, image_dil, element);
 	DEBUG imshow("image_dil", image_dil);
 
@@ -372,13 +352,11 @@ string OCRImpl::ocr()
 string OCRBuilderImpl::ocr()
 {
 	string ret;
-	vector<OCR_OPTION> options;
-	optionPicker.get(options);
 	int missed = 0;
 	debugMat = Mat();
 	for (auto& option : options)
 	{
-		this->option = option;
+		this->currentOption = option;
 		ret = OCRImpl(this).ocr();
 		if (ret.length() == 3)
 		{
@@ -387,7 +365,6 @@ string OCRBuilderImpl::ocr()
 				auto tmp = option;
 				option = options[0];
 				options[0] = tmp;
-				optionPicker.update(options);
 			}
 			break;
 		}
@@ -396,6 +373,7 @@ string OCRBuilderImpl::ocr()
 	imwrite(path + ".debug.png", debugMat);
 	DEBUG imshow("debugMat", debugMat);
 	DEBUG waitKey(0);
+	debugMat = Mat();
 	return ret;
 }
 
