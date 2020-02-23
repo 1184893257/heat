@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 *.o
+*debug.png
 
 
 *.cgi

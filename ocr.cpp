@@ -1,7 +1,9 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <mutex>
 #include <algorithm>
 #include <cassert>
+#include "ocr.h"
 
 using namespace std;
 using namespace cv;
@@ -9,7 +11,88 @@ using namespace cv;
 extern bool ocr_debug;
 #define DEBUG if (ocr_debug)
 
-Mat debugMat;
+typedef struct
+{
+	Size2i dilateSize;
+} OCR_OPTION;
+
+
+class OptionPicker
+{
+public:
+	void get(vector<OCR_OPTION>& options)
+	{
+		lock_guard<std::mutex> guard(mutex_);
+		options = list;
+	}
+
+	void update(const vector<OCR_OPTION>& options)
+	{
+		lock_guard<std::mutex> guard(mutex_);
+		list = options;
+	}
+private:
+	vector<OCR_OPTION> list
+	{
+		{
+			{3, 10}
+		},
+		{
+			{1, 10}
+		},
+		{
+			{3, 6}// 宽一点避免5被上下分隔
+		},
+		{
+			{1, 6}// 窄一点避免粘连上冒号
+		}
+	};
+	std::mutex mutex_;
+};
+OptionPicker optionPicker;
+
+
+class OCRBuilderImpl : public OCRBuilder
+{
+public:
+	~OCRBuilderImpl() {}
+	
+    OCRBuilder* setPath(const string& path)
+	{
+		this->path = path;
+		return this;
+	}
+    OCRBuilder* setGrayRange(int min, int max)
+	{
+		this->min = min;
+		this->max = max;
+		return this;
+	}
+    string ocr();
+
+	string path;
+	int min = 225;
+	int max = 250;
+	OCR_OPTION option;
+	Mat debugMat;
+};
+
+
+class OCRImpl
+{
+public:
+	OCRImpl(OCRBuilderImpl* builder): params(builder)
+	{
+	}
+	~OCRImpl() {}
+
+	void cutNums(const Mat& input, vector<Mat>& output);
+
+	string ocr();
+private:
+	OCRBuilderImpl* params;
+};
+
 
 // 无缺失旋转，可输入任何图片
 void rotate(Mat& input, float avAng)
@@ -101,7 +184,7 @@ void autoRotate(Mat& input, Mat& origin)
 	DEBUG imshow("rotate", input);
 }
 
-void cutNums(const Mat& input, vector<Mat>& output)
+void OCRImpl::cutNums(const Mat& input, vector<Mat>& output)
 {
 	vector<vector<Point> > contours_out;
 	vector<Vec4i> hierarchy;
@@ -129,15 +212,15 @@ void cutNums(const Mat& input, vector<Mat>& output)
 		}
 		DEBUG imshow("rects", dest);
 
-		if (debugMat.cols == 0)
+		if (params->debugMat.cols == 0)
 		{
-			debugMat = dest;
+			params->debugMat = dest;
 		}
 		else
 		{
 			Mat tmp;
-			hconcat(debugMat, dest, tmp);
-			debugMat = tmp;
+			hconcat(params->debugMat, dest, tmp);
+			params->debugMat = tmp;
 		}
 	}
 
@@ -232,14 +315,9 @@ int TubeIdentification(Mat inputmat) // 穿线法判断数码管a、b、c、d、e、f、g、
 	}
 }
 
-typedef struct
+string OCRImpl::ocr()
 {
-	Size2i dilateSize;
-}OCR_OPTION;
-
-string try_ocr(const string& picturePath, int min, int max, const OCR_OPTION& option)
-{
-	cv::Mat image = cv::imread(picturePath, cv::IMREAD_GRAYSCALE);
+	cv::Mat image = cv::imread(params->path, cv::IMREAD_GRAYSCALE);
 
 	Mat image_resized = image;
 	// resize(image, image_resized, Size(image.cols / 6, image.rows / 6));
@@ -249,9 +327,9 @@ string try_ocr(const string& picturePath, int min, int max, const OCR_OPTION& op
 
  	// convert to binary image
 	Mat& image_bin0 = image;
-	threshold(image_resized, image_bin0, max, 255, THRESH_TOZERO_INV);
+	threshold(image_resized, image_bin0, params->max, 255, THRESH_TOZERO_INV);
 	Mat& image_bin = image_resized;
-	threshold(image_bin0, image_bin, min, 255, THRESH_BINARY);
+	threshold(image_bin0, image_bin, params->min, 255, THRESH_BINARY);
 	DEBUG imshow("image_bin", image_bin);
 
 	Mat& image_ero = image_bin0;
@@ -263,7 +341,7 @@ string try_ocr(const string& picturePath, int min, int max, const OCR_OPTION& op
 	autoRotate(image_ero, originCopy);
 
 	Mat& image_dil = image_bin;
-	element = getStructuringElement(MORPH_RECT, option.dilateSize);
+	element = getStructuringElement(MORPH_RECT, params->option.dilateSize);
 	dilate(image_ero, image_dil, element);
 	DEBUG imshow("image_dil", image_dil);
 
@@ -291,47 +369,34 @@ string try_ocr(const string& picturePath, int min, int max, const OCR_OPTION& op
 	return result;
 }
 
-
-auto options = vector<OCR_OPTION>
+string OCRBuilderImpl::ocr()
 {
-	{
-		{3, 10}
-	},
-	{
-		{1, 10}
-	},
-	{
-		{3, 6}// 宽一点避免5被上下分隔
-	},
-	{
-		{1, 6}// 窄一点避免粘连上冒号
-	}
-};
-
-string ocr(const string& picturePath, int min, int max)
-{
-
-	debugMat = Mat();
-
 	string ret;
+	vector<OCR_OPTION> options;
+	optionPicker.get(options);
+	int missed = 0;
+	debugMat = Mat();
 	for (auto& option : options)
 	{
-		ret = try_ocr(picturePath, min, max, option);
-		if (ret.length() == 3)
+		this->option = option;
+		ret = OCRImpl(this).ocr();
+		if (ret.length() == 3 && missed)
 		{
 			auto tmp = option;
 			option = options[0];
 			options[0] = tmp;
+			optionPicker.update(options);
 			break;
 		}
+		missed++;
 	}
-	imwrite(picturePath + ".debug.png", debugMat);
+	imwrite(path + ".debug.png", debugMat);
 	DEBUG imshow("debugMat", debugMat);
 	DEBUG waitKey(0);
 	return ret;
 }
 
-string ocr(const string& picturePath)
+unique_ptr<OCRBuilder> createOCRBuilder()
 {
-	return ocr(picturePath, 225, 250);
+	return make_unique<OCRBuilderImpl>();
 }

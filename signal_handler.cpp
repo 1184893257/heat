@@ -4,12 +4,11 @@
 #include "json.hpp"
 #include "ipc.h"
 #include "config.h"
+#include "ocr.h"
 using json = nlohmann::json;
 
 void hit();
 void capture(const string& savePath);
-void rotate(const string& path, float rot, const vector<int>& clip);
-string ocr(const string& picturePath, int min, int max);
 
 static time_t heat_time = 4 * 3600;
 
@@ -79,8 +78,11 @@ void handleSignal(int signum)
 		{
 			rotate(abs_path, rot, getClip(req));
 		}
+		auto builder = createOCRBuilder();
 		req["ret"] = "snap ok";
-		req["ocr"] = ocr(abs_path, getInt(req, "min"), getInt(req, "max"));
+		req["ocr"] = builder->setPath(abs_path)
+			->setGrayRange(getInt(req, "min"), getInt(req, "max"))
+			->ocr();
 		vector<string> imgs;
 		imgs.push_back(path_to_webroot(path_to_heat));
 		imgs.push_back(path_to_webroot(path_to_heat) + ".debug.png");
@@ -119,7 +121,9 @@ bool captureAndHit(HeatResult& result)
 		return false;
 	}
 
-	result.textBeforeHit = ocr(beforeHitPicture, config.gray_min, config.gray_max);
+	auto builder = createOCRBuilder();
+	result.textBeforeHit = builder->setPath(beforeHitPicture)
+		->setGrayRange(config.gray_min, config.gray_max)->ocr();
 	int textLength = result.textBeforeHit.length();
 	if (textLength != 3)
 	{
@@ -137,7 +141,8 @@ bool captureAndHit(HeatResult& result)
 		return false;
 	}
 
-	result.textAfterHit = ocr(afterHitPicture, config.gray_min, config.gray_max);
+	result.textAfterHit = builder->setPath(afterHitPicture)
+		->setGrayRange(config.gray_min, config.gray_max)->ocr();
 	textLength = result.textAfterHit.length();
 	if (textLength != 3)
 	{

@@ -1,18 +1,17 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "ocr.h"
 using namespace std;
-
-string ocr(const string&);
-string ocr(const string& picturePath, int min, int max);
 
 bool ocr_debug = false;
 
 int main()
 {
+	auto builder = createOCRBuilder();
 	if (ocr_debug)
 	{
-		cout << ocr("snap.jpg", 150, 250) << endl;
+		cout << builder->setPath("snap.jpg")->setGrayRange(150, 250)->ocr() << endl;
 	}
 	else
 	{
@@ -25,7 +24,7 @@ int main()
 			stringstream path;
 			path << dir << i << ".jpg";
 
-			cout << ocr(path.str()) << endl;
+			cout << builder->setPath(path.str())->ocr() << endl;
 		}
 #endif
 	}
