@@ -380,12 +380,15 @@ string OCRBuilderImpl::ocr()
 	{
 		this->option = option;
 		ret = OCRImpl(this).ocr();
-		if (ret.length() == 3 && missed)
+		if (ret.length() == 3)
 		{
-			auto tmp = option;
-			option = options[0];
-			options[0] = tmp;
-			optionPicker.update(options);
+			if (missed)
+			{
+				auto tmp = option;
+				option = options[0];
+				options[0] = tmp;
+				optionPicker.update(options);
+			}
 			break;
 		}
 		missed++;
