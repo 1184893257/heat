@@ -16,7 +16,7 @@ int main()
 	else
 	{
 #if defined(__linux__) || defined(__APPLE__)
-		cout << ocr("ocr/heater.jpg") << endl;
+		cout << builder->setPath("ocr/heater.jpg")->ocr() << endl;
 #else
 		string dir = "D:\\temp\\MobileFile\\";
 		for (int i = 0; i <= 9; ++i)
