@@ -2,7 +2,7 @@ all: heat.cgi daemon ocr_main
 
 CC = g++
 
-CXXFLAGS += -O0 -g -std=gnu++11 -I/usr/include/opencv
+CXXFLAGS += -O0 -g -std=gnu++14 -I/usr/include/opencv
 
 CV_LIBS = `pkg-config --libs opencv`
 
