@@ -39,7 +39,7 @@ static vector<int> getClip(const json& req)
 void handleSignal(int signum)
 {
 	json req;
-	severListen(req);
+	serverListen(req);
 	auto cmd = req["cmd"].get<string>();
 	syslog(LOG_INFO, "recv cmd: %s", cmd.c_str());
 	if (cmd == string("hit"))
@@ -97,7 +97,7 @@ void handleSignal(int signum)
 		req["ret"] = "unknown cmd";
 	}
 	syslog(LOG_INFO, "finish cmd: %s", cmd.c_str());
-	severReply(req);
+	serverReply(req);
 }
 
 #ifndef NOTPI

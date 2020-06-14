@@ -62,10 +62,10 @@ static bool recv(int msgid, long msgType, json& req, int msgflg = 0)
 	Msg rcv;
 	int bytes = msgrcv(msgid, &rcv, sizeof(rcv) - sizeof(rcv.msgType), msgType, msgflg);
 	if (bytes > 0) {
-    req = json::parse(rcv.json);
-    return true;
+		req = json::parse(rcv.json);
+		return true;
 	}
-  return false;
+	return false;
 }
 
 void clear(vector<json>& v)
@@ -86,13 +86,18 @@ void clientCall(const nlohmann::json& req, nlohmann::json& rsp)
 	recv(msgid, RESPONSE, rsp);
 }
 
-void severListen(nlohmann::json& req)
+void serverInit()
+{
+	initMsg(true);
+}
+
+void serverListen(nlohmann::json& req)
 {
 	int msgid = initMsg(true);
 	recv(msgid, REQUEST, req);
 }
 
-void severReply(const nlohmann::json& rsp)
+void serverReply(const nlohmann::json& rsp)
 {
 	json err;
 	int msgid = initMsg(true);

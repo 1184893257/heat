@@ -22,6 +22,7 @@ void del_dir(const char *npath);
 int main()
 {
 	daemon(0, 0);
+	serverInit();
 	initSG90();
 	signal(SIGUSR1, handleSignal);
 	init_config(true);
