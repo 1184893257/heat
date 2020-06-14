@@ -3,6 +3,8 @@ Description=Heat my towel
 After=network.target
 
 [Service]
+LimitNOFILE=1000000
+LimitCORE=infinity
 Type=forking
 Restart=on-failure
 RestartSec=5s

@@ -26,6 +26,7 @@ int main()
 	signal(SIGUSR1, handleSignal);
 	init_config(true);
 
+	syslog(LOG_INFO, "daemon start ok");
 	bool hasError = false;
 	for (;;)
 	{
