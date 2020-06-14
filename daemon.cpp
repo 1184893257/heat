@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include "config.h"
+#include "ipc.h"
 
 using namespace std;
 using json = nlohmann::json;
